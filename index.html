@@ -76,10 +76,10 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:'Noto
 /* PROGRESS */
 .prog-wrap{height:3px;background:var(--paper3);flex-shrink:0}
 .prog-fill{height:3px;background:var(--accent);transition:width 0.4s cubic-bezier(.4,0,.2,1)}
-.q-prog-wrap{background:var(--paper2);border-bottom:1px solid var(--paper3);flex-shrink:0;padding:10px 1.25rem 8px}
-.q-prog-bar-bg{height:4px;background:var(--paper3);border-radius:2px;overflow:hidden}
-.q-prog-bar-fill{height:4px;background:var(--accent);border-radius:2px;transition:width 0.35s}
-.q-prog-text{font-size:11px;color:var(--ink3);text-align:right;margin-top:4px}
+.q-prog-wrap{background:var(--paper2);border-bottom:1px solid var(--paper3);flex-shrink:0;padding:0 1.25rem 8px;margin-top:0}
+.q-prog-bar-bg{height:7px;background:var(--paper3);overflow:hidden}
+.q-prog-bar-fill{height:7px;background:var(--accent);transition:width 0.35s}
+.q-prog-text{font-size:11px;color:var(--ink3);text-align:right;margin-top:5px}
 .page-counter{font-size:11px;color:var(--ink3);padding:0.6rem 1.25rem 0;text-align:right;flex-shrink:0}
 
 /* SECTION HEADER */
@@ -495,24 +495,24 @@ function makeQPage(pid,pIdx,q,qNum,qTotal,secLabel,prevIdx,nextIdx){
     <div class="page-body" style="padding-bottom:1rem">
       <div class="q-prog-wrap">
         <div class="q-prog-bar-bg"><div class="q-prog-bar-fill" id="qpb_${pid}"></div></div>
-        <div class="q-prog-text" id="qpt_${pid}">已完成 0 / ${TOTAL_Q} 題</div>
+        <div class="q-prog-text" id="qpt_${pid}">第 1 / ${TOTAL_Q} 題</div>
       </div>
       <div style="padding:0 1.25rem;margin-top:0.75rem">
       <div class="q-section-label">${secLabel} · ${qNum+1} / ${qTotal}</div>
-      <div class="q-instruction">請比較兩個準則的相對重要性<br><span style="font-size:11px;color:var(--ink3)">滑桿靠左=左側較重要，靠右=右側較重要，置中=相等</span></div>
+
       <div class="pair-wrap">
         <div class="pair-box" id="lb_${pid}">${q.left}</div>
         <div class="vs-dot">VS</div>
         <div class="pair-box" id="rb_${pid}">${q.right}</div>
       </div>
+      <div class="story-box"><div class="story-lbl">💬 這個選擇代表</div><div id="st_${pid}"></div></div>
       <div id="bf_${pid}" style="margin:0.5rem 0 0.25rem"></div>
       <div class="slider-outer">
         <div class="slider-dir"><span class="dl">← ${q.left.length>8?q.left.slice(0,6)+'…':q.left} 較重要</span><span class="dr">${q.right.length>8?q.right.slice(0,6)+'…':q.right} 較重要 →</span></div>
         <input type="range" min="1" max="9" step="1" value="5" id="sl_${pid}" oninput="onSlide('${pid}','${q.key}',this.value)"/>
         <div class="scale-nums"><span>9</span><span>8</span><span>7</span><span>6</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
       </div>
-      <div class="chip-result" id="ch_${pid}"></div>
-      <div class="story-box"><div class="story-lbl">💬 這個選擇代表</div><div id="st_${pid}"></div></div>
+
       <div class="explain-box"><div class="explain-lbl">📌 準則說明</div><div id="ex_${pid}">${getExplain(q)}</div></div>
     </div>
       </div>
@@ -613,11 +613,7 @@ function updateQDisplay(pid,q,v){
   if(!lb)return;
   lb.className='pair-box'+(v<5?' hi-left':'');
   rb.className='pair-box'+(v>5?' hi-right':'');
-  let chip;
-  if(v===5)chip='相等（5：5）— 兩者重要性相同';
-  else if(v<5)chip=`${scaleName(ls)}（${ls}：${rs}）— 左側「${q.left}」較重要`;
-  else chip=`${scaleName(rs)}（${ls}：${rs}）— 右側「${q.right}」較重要`;
-  const ch=document.getElementById('ch_'+pid);if(ch)ch.textContent=chip;
+
   const st=document.getElementById('st_'+pid);if(st)st.textContent=getStory(q,v)||'請拖動滑桿選擇';
   renderButterfly(pid,q,v);
 }
@@ -673,15 +669,18 @@ function getPageId(idx){
 }
 
 function updateProgress(idx){
-  const answered=Object.keys(answers).length;
-  const pct=Math.min((answered/TOTAL_Q)*100,100);
-  // Update all Q page progress bars
-  document.querySelectorAll('[id^="qpb_"]').forEach(el=>{
-    el.style.width=pct+'%';
-  });
-  document.querySelectorAll('[id^="qpt_"]').forEach(el=>{
-    el.textContent='已完成 '+answered+' / '+TOTAL_Q+' 題';
-  });
+  // Find current question number (1-based) based on page index
+  const qNums=Object.keys(pageMap); // question keys
+  const qPageIdx=qNums.find(k=>pageMap[k]===idx);
+  const qIndex=qPageIdx?questions.findIndex(q=>q.key===qPageIdx):-1;
+  const currentQNum=qIndex>=0?qIndex+1:null;
+  const pct=currentQNum?Math.min((currentQNum/TOTAL_Q)*100,100):0;
+  // Update the visible page's progress bar
+  const pid=getPageId(idx);
+  const pb=document.getElementById('qpb_'+pid);
+  const pt=document.getElementById('qpt_'+pid);
+  if(pb)pb.style.width=pct+'%';
+  if(pt&&currentQNum)pt.textContent='第 '+currentQNum+' / '+TOTAL_Q+' 題';
 }
 function refreshProgress(){
   updateProgress(currentPage);
@@ -824,9 +823,41 @@ function doRestart(){
   updateProgress(0);
 }
 
+// =================== DYNAMIC STORY HEIGHT ===================
+function fixStoryBoxHeights(){
+  // Create a hidden off-screen container to measure all story texts
+  const probe=document.createElement('div');
+  probe.style.cssText='position:fixed;visibility:hidden;pointer-events:none;'+
+    'left:-9999px;top:0;width:calc(100vw - 2.5rem);max-width:460px;'+
+    'font-size:12px;line-height:1.8;padding:11px 13px;';
+  document.body.appendChild(probe);
+
+  let maxH=0;
+  // Collect all story texts from STORIES
+  Object.values(STORIES).forEach(s=>{
+    ['left','right','equal'].forEach(dir=>{
+      probe.textContent=s[dir]||'';
+      maxH=Math.max(maxH,probe.offsetHeight);
+    });
+  });
+  document.body.removeChild(probe);
+
+  // Add label height (story-lbl ~20px) + padding top/bottom (22px)
+  const totalH=maxH+20+22+4;
+
+  // Apply fixed height to all story boxes
+  document.querySelectorAll('.story-box').forEach(el=>{
+    el.style.height=totalH+'px';
+    el.style.overflow='hidden';
+    el.style.minHeight='';
+  });
+}
+
 // =================== INIT ===================
 buildPages();
 goTo(0);
+// Run after paint so DOM is ready
+requestAnimationFrame(()=>requestAnimationFrame(fixStoryBoxHeights));
 </script>
 </body>
 </html>
