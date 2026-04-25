@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AIoT 智慧工廠導入關鍵成功因素研究問卷</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1A1A2E;--ink2:#3C3C5A;--ink3:#7B7B9A;
+  --paper:#FAFAF8;--paper2:#F2F1ED;--paper3:#E8E6DF;
+  --accent:#3D5A80;--accent2:#5B8DB8;--gold:#C9A84C;
+  --green:#2D6A4F;--red:#9B2226;
+  --r:14px;--r2:10px;
+  --shadow:0 2px 16px rgba(26,26,46,0.08);
+  --shadow2:0 4px 32px rgba(26,26,46,0.13);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--paper);color:var(--ink);font-family:'Noto Sans TC',sans-serif;overflow:hidden}
+#root{height:100%;display:flex;flex-direction:column;max-width:520px;margin:0 auto;position:relative}
+
+/* PAGE SYSTEM */
+.page{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--paper);
+  transition:transform 0.38s cubic-bezier(.4,0,.2,1),opacity 0.38s;overflow-y:auto;overflow-x:hidden}
+.page.hidden{transform:translateX(100%);opacity:0;pointer-events:none}
+.page.slide-left{transform:translateX(-100%);opacity:0;pointer-events:none}
+
+/* SCROLLABLE CONTENT */
+.page-body{flex:1;overflow-y:auto;padding:1.5rem 1.25rem;padding-bottom:0}
+.page-footer{padding:1rem 1.25rem 1.5rem;background:var(--paper);border-top:1px solid var(--paper3);flex-shrink:0}
+
+/* COVER PAGE */
+.cover-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.cover-bg::before{content:'';position:absolute;top:-20%;right:-20%;width:60%;height:60%;
+  background:radial-gradient(circle,rgba(61,90,128,0.08) 0%,transparent 70%);border-radius:50%}
+.cover-bg::after{content:'';position:absolute;bottom:-10%;left:-10%;width:50%;height:50%;
+  background:radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%);border-radius:50%}
+.cover-header{padding:2rem 1.5rem 0;position:relative}
+.cover-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;
+  font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:0.08em;margin-bottom:1rem}
+.cover-title{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:700;line-height:1.5;
+  color:var(--ink);margin-bottom:0.5rem}
+.cover-title span{color:var(--accent)}
+.cover-divider{width:40px;height:3px;background:var(--gold);border-radius:2px;margin:1rem 0}
+.cover-letter{background:var(--paper2);border-radius:var(--r);padding:1.25rem;margin:0 1.25rem;
+  font-size:13px;line-height:1.9;color:var(--ink2);border-left:3px solid var(--accent)}
+.cover-letter strong{color:var(--accent);font-weight:600}
+.cover-sig{margin:1rem 1.25rem;padding:1rem 1.25rem;background:var(--paper2);border-radius:var(--r2);
+  font-size:12px;line-height:2;color:var(--ink2);border:1px solid var(--paper3)}
+.cover-sig .sig-row{display:flex;gap:8px}
+.cover-sig .sig-label{color:var(--ink3);white-space:nowrap}
+.cover-sig .sig-val{color:var(--ink);font-weight:500}
+.cover-email{font-size:11px;color:var(--accent2);margin-top:4px}
+.cover-footer-space{height:6rem}
+
+/* BIG START BUTTON */
+.btn-start{width:100%;padding:15px;background:var(--accent);color:#fff;border:none;
+  border-radius:var(--r);font-size:16px;font-weight:600;font-family:'Noto Sans TC',sans-serif;
+  cursor:pointer;letter-spacing:0.05em;box-shadow:0 4px 20px rgba(61,90,128,0.35);
+  transition:transform 0.15s,box-shadow 0.15s}
+.btn-start:active{transform:scale(0.97);box-shadow:0 2px 8px rgba(61,90,128,0.2)}
+
+/* NAV BUTTONS */
+.nav-row{display:flex;align-items:center;gap:10px}
+.btn-back{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--paper3);background:var(--paper2);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+  transition:background 0.15s,border-color 0.15s}
+.btn-back:active{background:var(--paper3)}
+.btn-back svg{width:16px;height:16px;stroke:var(--ink3)}
+.btn-next-main{flex:1;padding:13px;background:var(--accent);color:#fff;border:none;
+  border-radius:var(--r);font-size:15px;font-weight:600;font-family:'Noto Sans TC',sans-serif;
+  cursor:pointer;transition:transform 0.15s,opacity 0.15s}
+.btn-next-main:active{transform:scale(0.97)}
+.btn-next-main:disabled{opacity:0.4;cursor:not-allowed}
+
+/* PROGRESS */
+.prog-wrap{height:3px;background:var(--paper3);flex-shrink:0}
+.prog-fill{height:3px;background:var(--accent);transition:width 0.4s cubic-bezier(.4,0,.2,1)}
+.page-counter{font-size:11px;color:var(--ink3);padding:0.6rem 1.25rem 0;text-align:right;flex-shrink:0}
+
+/* SECTION HEADER */
+.sec-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(61,90,128,0.1);
+  color:var(--accent);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:1rem}
+.page-title{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:var(--ink);
+  line-height:1.5;margin-bottom:0.5rem}
+.page-subtitle{font-size:13px;color:var(--ink3);line-height:1.7;margin-bottom:1.25rem}
+.page-body-text{font-size:13px;color:var(--ink2);line-height:1.9;margin-bottom:1rem}
+
+/* INSTRUCTION PAGE */
+.instr-card{background:var(--paper2);border-radius:var(--r);padding:1.1rem;margin-bottom:0.875rem;
+  border-left:3px solid var(--accent)}
+.instr-card h4{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:0.5rem;letter-spacing:0.04em}
+.instr-card p{font-size:12.5px;color:var(--ink2);line-height:1.8}
+.highlight-box{background:linear-gradient(135deg,rgba(61,90,128,0.05),rgba(201,168,76,0.05));
+  border:1px solid var(--paper3);border-radius:var(--r);padding:1rem;margin-bottom:1rem;font-size:13px;color:var(--ink2);line-height:1.85}
+.highlight-box strong{color:var(--accent)}
+
+/* FORM PAGE */
+.field-group{margin-bottom:1.25rem}
+.field-label{font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.field-label span{color:var(--red);font-size:11px}
+.field-input{width:100%;padding:12px 14px;border:1.5px solid var(--paper3);border-radius:var(--r2);
+  font-size:15px;font-family:'Noto Sans TC',sans-serif;color:var(--ink);background:var(--paper2);
+  outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(61,90,128,0.1)}
+.field-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(155,34,38,0.1)}
+.error-msg{font-size:11px;color:var(--red);margin-top:4px;display:none}
+.error-msg.show{display:block}
+.privacy-note{background:var(--paper2);border-radius:var(--r2);padding:0.875rem;font-size:12px;
+  color:var(--ink3);line-height:1.7;border:1px solid var(--paper3);margin-bottom:1rem}
+
+/* DIM INTRO TABLE */
+.dim-table{width:100%;border-collapse:collapse;border-radius:var(--r);overflow:hidden;
+  box-shadow:var(--shadow);margin-bottom:1rem;font-size:12.5px}
+.dim-table thead th{background:var(--accent);color:#fff;padding:9px 12px;text-align:left;font-weight:600;font-size:12px}
+.dim-table tbody tr:nth-child(odd){background:var(--paper2)}
+.dim-table tbody tr:nth-child(even){background:var(--paper)}
+.dim-table td{padding:9px 12px;color:var(--ink2);vertical-align:top;line-height:1.5}
+.dim-table td:first-child{font-weight:600;color:var(--accent);white-space:nowrap;border-right:1px solid var(--paper3)}
+
+/* CRITERIA INTRO */
+.crit-intro-card{border-radius:var(--r);border:1px solid var(--paper3);overflow:hidden;margin-bottom:0.875rem}
+.crit-intro-header{background:var(--accent);color:#fff;padding:10px 14px;font-size:13px;font-weight:600}
+.crit-intro-body{background:var(--paper2)}
+.crit-item{padding:10px 14px;border-bottom:1px solid var(--paper3);font-size:12.5px}
+.crit-item:last-child{border-bottom:none}
+.crit-item-name{font-weight:600;color:var(--ink);margin-bottom:3px;font-size:13px}
+.crit-item-desc{color:var(--ink3);line-height:1.65}
+
+/* QUESTION PAGE */
+.q-section-label{font-size:11px;font-weight:600;color:var(--accent3,var(--accent));
+  letter-spacing:0.06em;margin-bottom:0.5rem;text-transform:uppercase}
+.q-instruction{font-size:12px;color:var(--ink3);margin-bottom:1rem;line-height:1.6}
+.pair-wrap{display:flex;gap:10px;align-items:stretch;margin-bottom:1rem}
+.pair-box{flex:1;padding:12px 10px;border-radius:var(--r2);border:1.5px solid var(--paper3);
+  background:var(--paper2);text-align:center;font-size:13px;font-weight:600;color:var(--ink);
+  line-height:1.45;transition:all 0.25s}
+.pair-box.hi-left{background:#EEF2F8;border-color:var(--accent);color:var(--accent);transform:scale(1.03)}
+.pair-box.hi-right{background:#EDF5F0;border-color:var(--green);color:var(--green);transform:scale(1.03)}
+.vs-dot{align-self:center;font-size:10px;font-weight:700;color:var(--ink3);letter-spacing:0.05em;flex-shrink:0}
+.slider-outer{margin:0.75rem 0 0.5rem}
+.slider-dir{display:flex;justify-content:space-between;font-size:10px;font-weight:600;margin-bottom:6px}
+.slider-dir .dl{color:var(--accent)}.slider-dir .dr{color:var(--green)}
+input[type=range]{width:100%;height:5px;accent-color:var(--accent);cursor:pointer;display:block}
+.scale-nums{display:flex;justify-content:space-between;margin-top:5px}
+.scale-nums span{font-size:10px;color:var(--ink3);width:11.1%;text-align:center}
+.chip-result{margin-top:0.875rem;padding:10px 14px;border-radius:var(--r2);
+  background:var(--paper2);border:1px solid var(--paper3);text-align:center;
+  font-size:13px;font-weight:600;color:var(--ink);transition:background 0.2s}
+.story-box{margin-top:0.75rem;padding:11px 13px;border-radius:var(--r2);
+  border-left:3px solid var(--accent);background:var(--paper2);
+  font-size:12px;color:var(--ink2);line-height:1.8}
+.story-lbl{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.06em;
+  text-transform:uppercase;margin-bottom:5px}
+.explain-box{margin-top:0.75rem;padding:11px 13px;border-radius:var(--r2);
+  border:1px solid var(--paper3);background:var(--paper);font-size:12px;
+  color:var(--ink3);line-height:1.75;white-space:pre-line}
+.explain-lbl{font-size:10px;font-weight:700;color:var(--ink3);letter-spacing:0.06em;
+  text-transform:uppercase;margin-bottom:5px}
+
+/* RESULT */
+.result-section{font-size:11px;font-weight:700;color:var(--ink3);padding:8px 0 4px;
+  border-top:1px solid var(--paper3);margin-top:8px;letter-spacing:0.06em;text-transform:uppercase}
+.result-section:first-child{border-top:none;margin-top:0}
+.result-row{display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;border-bottom:1px solid var(--paper2);gap:8px}
+.result-row:last-child{border-bottom:none}
+.result-pair{font-size:12px;color:var(--ink3);flex:1;line-height:1.4}
+.result-val{font-size:12px;font-weight:600;color:var(--accent);white-space:nowrap}
+.export-btn{width:100%;padding:14px;border-radius:var(--r);border:none;background:var(--accent);
+  color:#fff;font-size:15px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;
+  box-shadow:0 4px 16px rgba(61,90,128,0.3);transition:transform 0.15s}
+.export-btn:active{transform:scale(0.97)}
+.restart-btn{width:100%;padding:11px;border-radius:var(--r);border:1.5px solid var(--paper3);
+  background:transparent;font-size:14px;font-family:'Noto Sans TC',sans-serif;
+  cursor:pointer;color:var(--ink3);margin-top:8px}
+
+/* UTIL */
+.mb1{margin-bottom:1rem}.mt1{margin-top:1rem}
+.section-num{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--accent);
+  color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:22px;margin-right:6px;flex-shrink:0}
+.success-icon{font-size:48px;text-align:center;margin:1rem 0}
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div id="qProgressBar" style="display:none;font-size:11px;color:#7B7B9A;padding:4px 1.25rem 0;justify-content:flex-end"></div>
+
+  <!-- PAGE 0: COVER -->
+  <div class="page" id="p0">
+    <div class="cover-bg"></div>
+    <div class="page-body">
+      <div class="cover-header">
+        <div class="cover-badge">🎓 國立雲林科技大學 · 資訊管理研究所</div>
+        <div class="cover-title">探討電子組裝代工業導入<span>人工智慧物聯網</span>之關鍵成功因素研究問卷</div>
+        <div class="cover-divider"></div>
+      </div>
+      <div class="cover-letter">
+        <p><strong>親愛的產業專家您好：</strong></p>
+        <p style="margin-top:0.75rem">首先感謝您在第一階段模糊德菲法專家問卷中為我們熱切地回覆問題，並再次懇請您能夠於百忙之中撥冗 <strong>10～15 分鐘</strong>來填寫下列資料。</p>
+        <p style="margin-top:0.75rem">本問卷目的是欲將第一階段問卷中針對「電子組裝代工業導入人工智慧物聯網之關鍵成功因素」評估準則，做進一步重要程度之比較，希望藉由您專業、豐富的經驗意見，得到各個準則所代表之<strong>權重指標</strong>。</p>
+        <p style="margin-top:0.75rem">問卷所得資料，純粹作為學術研究之用，絕不做商業用途及對外公開，敬請安心填答。再次感謝您的協助。</p>
+        <p style="margin-top:0.75rem;color:var(--ink3)">順頌　時祺</p>
+      </div>
+      <div class="cover-sig">
+        <div class="sig-row"><span class="sig-label">研究單位</span><span class="sig-val">國立雲林科技大學　資訊管理研究所</span></div>
+        <div class="sig-row"><span class="sig-label">指導教授</span><span class="sig-val">陳昭宏　副教授兼任系主任　博士</span></div>
+        <div class="sig-row"><span class="sig-label">研　究　生</span><span class="sig-val">陳勁諺　敬上</span></div>
+        <div class="cover-email">✉ kevin9810twtw@gmail.com</div>
+      </div>
+      <div class="cover-footer-space"></div>
+    </div>
+    <div class="page-footer">
+      <button class="btn-start" onclick="goTo(1)">開始填寫問卷 →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 1: INSTRUCTIONS -->
+  <div class="page hidden" id="p1">
+    <div class="page-counter" id="ctr1"></div>
+    <div class="page-body">
+      <div class="sec-chip">📋 填答說明</div>
+      <div class="page-title">開始填答前，請先閱讀</div>
+      <div class="highlight-box">
+        本研究透過實務觀察發現，AIoT 的成敗核心往往不在於「演算法的先進程度」，而在於<strong>「資料基礎」與「系統整合」</strong>的完整性。若設備通訊協定不一、資料無法有效交換，再強大的 AI 模型也難以發揮價值。換言之，AIoT 要成功，取決於資料能否「說實話」以及系統能否「接得起來」。
+      </div>
+      <div class="instr-card">
+        <h4>📌 回顧實務經驗</h4>
+        <p>請您在作答時，優先回想您在參與設備整合、資料蒐集或 AI 技術導入時的實際案例與所遭遇的瓶頸。</p>
+      </div>
+      <div class="instr-card">
+        <h4>📌 詳閱後填答</h4>
+        <p>由於本研究採用系統化分析（FDM 與 FAHP），各指標間的相對重要性對研究結果至關重要，請您在詳細閱讀各項因素定義後，依據您的專業判斷進行填答。</p>
+      </div>
+      <div class="instr-card" style="border-left-color:var(--gold)">
+        <h4 style="color:var(--gold)">💡 您的貢獻</h4>
+        <p>您的寶貴經驗，將協助業界建立更具實務價值的 AIoT 評估架構。再次感謝您的協助與支持！</p>
+      </div>
+    </div>
+    <div class="page-footer">
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(0)" title="上一頁">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="btn-next-main" onclick="goTo(2)">下一頁</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: BASIC INFO -->
+  <div class="page hidden" id="p2">
+    <div class="page-counter" id="ctr2"></div>
+    <div class="page-body">
+      <div class="sec-chip">第一部分</div>
+      <div class="page-title">基本資料填寫</div>
+      <div class="privacy-note">📍 以下所有資料僅作為學術分析使用，將嚴格保密，請您放心填寫。感謝您的協助！</div>
+      <div class="field-group">
+        <div class="field-label">您的姓名 <span>*必填</span></div>
+        <input class="field-input" type="text" id="inputName" placeholder="請輸入您的姓名"/>
+        <div class="error-msg" id="errName">請填寫姓名後再繼續</div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">任職的公司 <span>*必填</span></div>
+        <input class="field-input" type="text" id="inputCompany" placeholder="請輸入公司名稱"/>
+        <div class="error-msg" id="errCompany">請填寫公司名稱後再繼續</div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="btn-next-main" onclick="validateBasic()">下一頁</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: DIM INTRO -->
+  <div class="page hidden" id="p3">
+    <div class="page-counter" id="ctr3"></div>
+    <div class="page-body">
+      <div class="sec-chip">第二部分</div>
+      <div class="page-title">構面兩兩比較</div>
+      <div class="page-subtitle">本研究透過第一階段篩選，共確認以下 <strong>5 個構面</strong>，接下來請您依序比較各構面的相對重要性，共 10 題。</div>
+      <table class="dim-table">
+        <thead><tr><th>構面</th><th>核心意涵</th></tr></thead>
+        <tbody>
+          <tr><td>技術整合能力</td><td>設備能不能接起來、資料能不能通</td></tr>
+          <tr><td>資料品質與標準化</td><td>收集到的資料值不值得信、能不能用</td></tr>
+          <tr><td>組織管理與策略</td><td>公司上上下下有沒有齊心要推</td></tr>
+          <tr><td>資源投入與管理</td><td>願不願意真正花錢、花人、花時間</td></tr>
+          <tr><td>人才能力與培訓</td><td>公司有沒有懂 AIoT 的人</td></tr>
+        </tbody>
+      </table>
+      <div class="instr-card" style="font-size:12.5px">
+        <h4>📌 如何填答</h4>
+        <p>每題會呈現兩個構面，請<strong>拖動滑桿</strong>表示您認為哪個更重要。滑桿靠左代表左側構面較重要，靠右代表右側較重要，置中代表兩者同等重要。每個位置都有說明文字輔助判斷。</p>
+      </div>
+    </div>
+    <div class="page-footer">
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(2)">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="btn-next-main" onclick="goTo(4)">開始作答</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTION PAGES (4 ~ 4+numQ-1) generated by JS -->
+  <!-- CRIT INTRO PAGES and RESULT PAGE also generated by JS -->
+  <div id="dynamicPages"></div>
+</div>
+
+<script>
+// =================== DATA ===================
+const DIMS=[
+  {name:'技術整合能力',c:['設備異質性整合難度','IT/OT 整合能力','跨廠區資料串接能力','技術導入路徑規劃與試點能力']},
+  {name:'資料品質與標準化',c:['通訊協定標準化程度','資料可用性與一致性','跨系統語意一致性','資料存取與安全管控']},
+  {name:'組織管理與策略',c:['高階主管支持程度','組織內部推動共識']},
+  {name:'資源投入與管理',c:['導入預算充足性','專責人力與維運能力']},
+  {name:'人才能力與培訓',c:['AIoT 相關技術人員配置充足性']},
+];
+
+const DIM_DESC={
+  '技術整合能力':'工廠的設備和系統「能不能接起來、資料能不能通」。電子代工廠常有新舊設備混用、協定不同的問題，能不能把這些串接好，是 AIoT 能否成功的第一步。',
+  '資料品質與標準化':'收集到的資料「值不值得信、能不能用」。就算設備都接起來了，如果資料格式亂、定義不統一，AI 一樣跑不出有用的結果。資料品質是 AIoT 的地基。',
+  '組織管理與策略':'公司「上上下下有沒有齊心要推」。AIoT 不只是技術問題，更是組織問題。很多導入失敗不是技術不夠，而是老闆沒支持、各部門不配合。',
+  '資源投入與管理':'公司有沒有「真的願意花錢、花人、花時間」。很多公司想做但不敢投入，或一邊做 AIoT 一邊還要應付日常生產壓力，資源不夠就容易失敗。',
+  '人才能力與培訓':'公司有沒有「懂 AIoT 的人」。最好的系統也需要懂得用、懂得維護的人才。如果現場工程師對 AI、IoT 完全不熟，導入後系統很快就會被閒置。',
+};
+
+const CRIT_DESC={
+  '設備異質性整合難度':'工廠裡有很多不同品牌、不同年代的機器，這些機器講的「語言」各不相同。要把這些機器的資料統一整合起來，有多難？',
+  'IT/OT 整合能力':'IT 是電腦資訊系統（如 ERP、MES），OT 是工廠機台系統（如 PLC、感測器）。你們能不能讓這兩個世界的資料即時互通？',
+  '跨廠區資料串接能力':'如果公司有多個廠區，不同廠區的資料能不能統一彙整、即時比較分析？',
+  '技術導入路徑規劃與試點能力':'在全面導入 AIoT 前，有沒有先規劃分階段步驟，並選一條產線做小規模測試，確認可行後再推廣？',
+  '通訊協定標準化程度':'工廠各種設備用不同的通訊方式傳資料（如 Modbus、OPC UA、MQTT）。你們有沒有統一這些傳輸標準，讓資料可以順暢流通？',
+  '資料可用性與一致性':'收到的資料有沒有缺漏、重複、或時間對不上的問題？資料品質夠不夠好，能不能直接拿來分析？',
+  '跨系統語意一致性':'不同系統對同一個東西的叫法可能不同（如同一零件，MES 叫 A001，ERP 叫 P-001）。各系統的資料定義有沒有統一？',
+  '資料存取與安全管控':'AIoT 會收集大量生產資料，這些資料很敏感。誰可以看這些資料？有沒有適當的權限管控和資安防護？',
+  '高階主管支持程度':'董事長、總經理、廠長這些高層有沒有真的在背後支持 AIoT 導入？有沒有給資源、給時間、讓團隊有空間推動？',
+  '組織內部推動共識':'不只高層，中層主管和現場工程師是不是也認同要做這件事？大家有沒有一致的方向，還是各做各的、甚至互相阻礙？',
+  '導入預算充足性':'公司有沒有編列足夠的預算來買設備、做系統整合、聘請顧問或培訓人員？預算夠不夠決定能做多大、做多好。',
+  '專責人力與維運能力':'有沒有專門負責 AIoT 專案的人？還是每個人都兼著做？導入後有沒有人負責日常維護，讓系統持續運作？',
+  'AIoT 相關技術人員配置充足性':'公司裡有沒有足夠數量、具備 AIoT 相關技術能力的工程師？還是嚴重缺人，什麼事都靠外包？',
+};
+
+const STORIES={
+  '技術整合能力_資料品質與標準化':{left:'設備串不起來，資料再整齊也沒意義。您認為現階段最卡關的是「機器能不能通」，先把設備接通，資料品質才有改善的空間。',right:'設備就算串起來了，資料亂七八糟、各說各話，AI 一樣跑不出結果。您認為現在更緊迫的是把資料的格式和定義統一，讓收進來的資訊真正可以被信賴。',equal:'設備整合與資料品質互為前提——接不起來沒有資料，資料不可信一切白費，兩者同等重要。'},
+  '技術整合能力_組織管理與策略':{left:'老闆再支持、共識再強，機台串不起來就是空談。您認為技術整合是硬門檻，沒有它，組織層面的努力無從落地。',right:'技術問題花錢可以解決，但如果高層沒有意志、內部沒有共識，預算批不下來、部門互相推諉，再好的技術也推不動。',equal:'技術能力與組織支持缺一不可。沒有技術方向再對也做不到，沒有組織共識技術再強也推不起來。'},
+  '技術整合能力_資源投入與管理':{left:'錢和人到位了，但技術整合的複雜度仍可能讓專案卡死。設備異質、協定分歧是電子代工廠的現場硬關，必須優先突破。',right:'技術方案找得到，但預算不夠、沒有專責的人，什麼都是空的。很多 AIoT 失敗不是技術問題，是資源根本沒有到位。',equal:'有技術沒資源走不遠，有資源沒技術燒錢燒不出成果，兩者同等關鍵。'},
+  '技術整合能力_人才能力與培訓':{left:'設備串不起來，培訓再多人也沒用。地基不穩，人才的能力根本無從發揮。技術整合是 AIoT 的前提。',right:'系統建好了，但現場沒有人懂得用、懂得維護，很快就會被閒置。內部能力的缺口無法靠外包迴避。',equal:'沒有技術整合人才沒有舞台，沒有人才系統建好也會荒廢，兩者同樣重要。'},
+  '資料品質與標準化_組織管理與策略':{left:'組織再齊心，資料本身不可靠、各系統定義不一，決策還是會出錯。資料品質是 AI 分析的根基，必須優先確立。',right:'資料標準化是技術問題，花時間可以解，但如果組織沒有由上而下的推動意志，跨部門的資料整合根本推不動。',equal:'資料標準化需要組織協調才能跨部門落實，組織推動也需要可信的資料來支撐決策，兩者缺一不可。'},
+  '資料品質與標準化_資源投入與管理':{left:'資源燒了很多，但資料不可用，所有的分析都是假的。要先把資料整治好，資源才能砸在刀口上。',right:'資料治理是長期工程，沒有足夠的預算和專責的人，這件事根本啟動不了。資源到位才是資料品質能否改善的前提。',equal:'整治資料需要資源，而資源能否有效運用又取決於資料是否可信，兩者相輔相成。'},
+  '資料品質與標準化_人才能力與培訓':{left:'人才到位了，但資料格式亂、定義不統一，工程師天天在補資料、對口徑，根本沒辦法做分析。先把資料整好，人才才有用武之地。',right:'資料問題解決不了，常常是沒有懂的人去推動標準化、建立治理機制。有 AIoT 能力的人才，才是資料品質能否提升的關鍵推手。',equal:'懂的人才能建立好的資料標準，而好的資料又能讓人才的工作發揮真正的價值，兩者同樣重要。'},
+  '組織管理與策略_資源投入與管理':{left:'錢和人給了，但高層沒有真正的意志，遇到困難就縮手，資源很快就會被挪走。組織層面的決心才是 AIoT 能走多遠的根本。',right:'方向再對、共識再強，預算卡住、沒有專責人力，什麼都推不動。在電子代工廠的現實環境裡，資源是比組織意志更直接的瓶頸。',equal:'有方向沒資源是空話，有資源沒方向是浪費，組織支持與資源投入必須同步到位。'},
+  '組織管理與策略_人才能力與培訓':{left:'人才可以招募、可以培訓，但高層沒有長期投入的決心，AIoT 很容易在第一個挫折後就被放棄。組織的方向決定了人才能不能被留住、被發揮。',right:'老闆很支持，但現場沒有懂 AIoT 的人，系統建好也沒人能用、沒人能維護。人才的到位才是 AIoT 真正落地的最後一哩路。',equal:'組織給方向、人才給執行力，缺了哪一邊 AIoT 都難以持續。'},
+  '資源投入與管理_人才能力與培訓':{left:'人才很重要，但連預算都批不下來、沒有專責團隊，人才招進來也會因為沒有舞台而流失。資源是人才能否發揮的前提。',right:'預算到位了、人也招了，但這些人不具備 AIoT 的實際能力，錢只是在燒。真正懂的人才，比單純的資源投入更難得、更關鍵。',equal:'有錢沒人是資源浪費，有人沒錢是巧婦難為，兩者缺一不可。'},
+  '設備異質性整合難度_IT/OT 整合能力':{left:'就算 IT/OT 架構設計得再好，現場機台本身無法被讀取——協定不支援、介面封閉——整合都是空談。設備層的異質問題是更根本的卡關點。',right:'現場設備資料讀得到，但 IT 和 OT 系統無法對話、資料無法即時流通，上層的分析和決策就會脫節。IT/OT 整合才是讓資料真正產生價值的關鍵橋樑。',equal:'底層設備接不起來上層無從整合，上層整合不好底層資料也無法被利用，兩者同等重要。'},
+  '設備異質性整合難度_跨廠區資料串接能力':{left:'單廠的設備都還串不起來，談跨廠串接根本是超前部署。必須先解決眼前的設備異質問題，跨廠整合才有意義。',right:'單廠整合相對可控，但跨廠的資料標準、網路架構、權限管理才是真正複雜的挑戰。跨廠串接的難度常被低估，必須優先重視。',equal:'設備異質整合是基礎，跨廠串接是規模化的關鍵，缺一都會讓 AIoT 的價值無法擴散。'},
+  '設備異質性整合難度_技術導入路徑規劃與試點能力':{left:'路徑規劃再完整，遇到現場設備異質性的衝擊，計畫往往就被打亂。實際的整合難度才是影響成敗的關鍵變數。',right:'設備整合的難題很多都可以靠好的試點策略來降低風險——先選協定較統一的產線試跑，驗證後再推廣。有沒有規劃能力，決定了整合的成功率。',equal:'難度決定了挑戰有多大，好的規劃決定了能否一步步克服，兩者同等重要。'},
+  'IT/OT 整合能力_跨廠區資料串接能力':{left:'就算跨廠網路都通了，如果廠內 IT 和 OT 資料還是割裂的，跨廠串接只是把各廠的資料孤島連成更大的孤島。先解決廠內整合，才有跨廠的基礎。',right:'各廠內部 IT/OT 已有一定基礎，但多廠之間的資料標準、命名定義、同步機制，才是制約集團層級 AIoT 應用的瓶頸。',equal:'廠內整合是跨廠的前提，跨廠能力決定了 AIoT 能否在集團層面發揮規模效益，兩者同樣重要。'},
+  'IT/OT 整合能力_技術導入路徑規劃與試點能力':{left:'沒有 IT/OT 整合的能力，規劃再好的試點也會在技術執行上卡住。整合能力是硬實力，規劃只是輔助。',right:'IT/OT 整合本身不難，但沒有清楚的試點策略，往往同時在多個點動工、資源分散。好的路徑規劃，才能讓整合的推進有秩序、可控。',equal:'有能力沒策略容易亂，有策略沒能力落不了地，兩者同等重要。'},
+  '跨廠區資料串接能力_技術導入路徑規劃與試點能力':{left:'跨廠串接的複雜度遠超過一般規劃能預見的範圍。實際的執行能力，比規劃文件更決定成敗。',right:'跨廠的整合如果沒有清楚的試點規劃——先從哪個廠開始、怎麼驗收——很容易變成各廠各做各的，最後無法統一。路徑規劃才是跨廠整合能否收斂的關鍵。',equal:'有能力沒規劃容易失控，有規劃沒能力無法執行，兩者同樣重要。'},
+  '通訊協定標準化程度_資料可用性與一致性':{left:'協定沒有統一，上層根本收不到完整可靠的數值。協定標準化是資料可用的前提，沒有它資料品質無從談起。',right:'就算協定標準化了，資料還是有缺漏、時間戳對不上，AI 模型一樣跑不出可信的結果。資料本身的可用性，才是更直接影響分析品質的因素。',equal:'協定決定資料能不能進來，可用性決定進來的資料值不值得用，兩者同等重要。'},
+  '通訊協定標準化程度_跨系統語意一致性':{left:'資料傳進來了，但各系統對同一欄位的定義不同，還是要靠人工對口徑。但至少協定統一後，技術整合的門檻已大幅降低，協定是更根本的問題。',right:'協定統一只是讓資料能傳輸，但如果 MES 的「良品數」和 ERP 的「完工數」定義不同，跨系統分析還是會得出矛盾結論。語意一致性才是讓資料真正可用的關鍵。',equal:'協定決定資料能傳，語意決定資料能懂，兩者缺一都無法建立可信的跨系統分析。'},
+  '通訊協定標準化程度_資料存取與安全管控':{left:'資料安全很重要，但連資料都收不進來，談安全是本末倒置。協定標準化是更緊迫的技術前提。',right:'AIoT 平台一旦建立，資料就在多個系統間流通，如果存取沒有管控、資安沒有防護，生產資料外洩或被竄改的風險非常高。安全機制必須與整合同步建立。',equal:'沒有標準化資料進不來，沒有安全管控資料不敢流通，兩者同樣重要。'},
+  '資料可用性與一致性_跨系統語意一致性':{left:'資料缺漏、時間對不上、數值異常，這是最直接讓 AI 模型失效的問題。資料本身的品質是最基礎的要求。',right:'資料品質還好，但各系統對同一件事有不同的叫法和定義，跨系統比對時永遠在對口徑。語意一致性才是讓資料真正能被跨系統使用的核心問題。',equal:'資料可用性決定資料能不能信，語意一致性決定資料能不能在不同系統間被正確理解，兩者同等重要。'},
+  '資料可用性與一致性_資料存取與安全管控':{left:'資料本身就不可用，談安全管控是多餘的。先確保資料的品質和完整性，才是當下最需要解決的問題。',right:'資料品質已有一定基礎，但隨著平台擴大，愈來愈多部門在存取資料，如果沒有嚴格的權限控管，資料被誤用或外洩的風險快速上升。',equal:'資料要好用，也要能被安全地使用，兩者是 AIoT 平台可信賴的兩個前提。'},
+  '跨系統語意一致性_資料存取與安全管控':{left:'資安機制很重要，但各系統資料定義不統一，跨系統分析永遠需要人工翻譯，這個問題更根本、更影響日常運作。',right:'語意問題還可以靠人工補救，但如果資料存取沒有管控，一旦發生資安事件，生產資料外洩或遭竄改後果不可逆。安全管控的優先級更高。',equal:'語意一致性讓資料可以被正確理解，安全管控讓資料可以被安全流通，缺一都會讓平台的可信度出問題。'},
+  '高階主管支持程度_組織內部推動共識':{left:'就算中層和現場都有意願，高層沒有真正支持——預算批不下來、優先順序一直被壓——AIoT 的推動就會在每次資源競爭中輸掉。高層意志才是最終的決定性因素。',right:'高層說要推，但中層把 AIoT 當額外負擔、現場覺得麻煩，執行時就會處處摩擦。由下而上的共識，才是推動真正能落地的關鍵。',equal:'高層定方向給資源，中基層才能有效執行，兩者缺一 AIoT 都難以持續推進。'},
+  '導入預算充足性_專責人力與維運能力':{left:'預算到位，可以請外部顧問、採購解決方案，很多技術問題都能用錢解決。預算是一切資源投入的前提，沒有它什麼都動不了。',right:'預算批下來了，但沒有專責的人盯著跑、負責維運，錢只是在燒。AIoT 最怕有預算沒人才——導入完就沒人管，系統很快就荒廢了。',equal:'有錢沒人是資源浪費，有人沒錢是巧婦難為，兩者必須同步到位 AIoT 才能真正落地。'},
+};
+
+// =================== QUESTION BUILDER ===================
+function pairs(arr){const r=[];for(let i=0;i<arr.length;i++)for(let j=i+1;j<arr.length;j++)r.push([arr[i],arr[j]]);return r;}
+
+let questions=[];
+let answers={};
+let userName='',userCompany='';
+let pageMap={}; // qIndex -> pageId
+let idxMap={}; // pageId -> pageIdx  (for intro pages too)
+let currentPage=0;
+let totalPages=0;
+const TOTAL_Q=24; // fixed: 10 dim + 6+6+1+1=14 crit
+
+function buildStructure(){
+  questions=[];
+  // Dim pairs
+  pairs(DIMS.map(d=>d.name)).forEach(([a,b])=>questions.push({type:'dim',sec:'構面比較',left:a,right:b,key:`D_${a}_${b}`}));
+  // Crit pairs per dim
+  DIMS.forEach(d=>{
+    if(d.c.length<2) return;
+    pairs(d.c).forEach(([a,b])=>questions.push({type:'crit',sec:d.name,left:a,right:b,key:`${d.name}_${a}_${b}`,dim:d.name}));
+  });
+}
+
+function toScores(v){return{left:10-parseInt(v),right:parseInt(v)};}
+function scaleName(s){return['','超強','極強','頗強','稍強','相等','稍強','頗強','極強','超強'][s]||'';}
+function getStory(q,v){
+  const k1=q.left+'_'+q.right,k2=q.right+'_'+q.left;
+  const s=STORIES[k1]||STORIES[k2];
+  if(!s)return'';
+  const fl=!STORIES[k1]&&!!STORIES[k2];
+  if(v===5)return s.equal;
+  if(v<5)return fl?s.right:s.left;
+  return fl?s.left:s.right;
+}
+
+function getExplain(q){
+  if(q.type==='dim'){
+    return`【${q.left}】\n${DIM_DESC[q.left]||''}\n\n【${q.right}】\n${DIM_DESC[q.right]||''}`;
+  }else{
+    return`【${q.left}】\n${CRIT_DESC[q.left]||''}\n\n【${q.right}】\n${CRIT_DESC[q.right]||''}`;
+  }
+}
+
+// Build intro pages for each dim (except human talent which has only 1 crit)
+function buildPages(){
+  buildStructure();
+  const container=document.getElementById('dynamicPages');
+  container.innerHTML='';
+
+  // Fixed pages: 0(cover),1(instr),2(basic),3(dimintro) -> indices 0-3
+  // Q pages start at page index 4
+  // After dim questions, insert crit intro pages
+
+  let pageIdx=4;
+
+  // --- Pre-calculate totalPages first ---
+  {
+    let c=pageIdx;
+    pairs(DIMS.map(d=>d.name)).forEach(()=>c++);
+    DIMS.forEach(d=>{const cp=pairs(d.c);if(cp.length===0)return;c++;cp.forEach(()=>c++);});
+    totalPages=c; // result page index
+  }
+
+  // Dim question pages (10 questions)
+  const dimQs=questions.filter(q=>q.type==='dim');
+  dimQs.forEach((q,i)=>{
+    const pid='qp'+pageIdx;
+    pageMap[q.key]=pageIdx;
+    idxMap[pid]=pageIdx;
+    container.appendChild(makeQPage(pid,pageIdx,q,i,dimQs.length,'構面比較',pageIdx-1,pageIdx+1));
+    pageIdx++;
+  });
+
+  // For each dim with >1 crit: intro page + question pages
+  DIMS.forEach(d=>{
+    const critQs=questions.filter(q=>q.type==='crit'&&q.dim===d.name);
+    if(critQs.length===0)return;
+    const introPid='ci'+pageIdx;
+    const introPageIdx=pageIdx;
+    idxMap[introPid]=introPageIdx;
+    container.appendChild(makeCritIntroPage(introPid,introPageIdx,d,introPageIdx-1,introPageIdx+1));
+    pageIdx++;
+    critQs.forEach((q,i)=>{
+      const pid='qp'+pageIdx;
+      pageMap[q.key]=pageIdx;
+      idxMap[pid]=pageIdx;
+      container.appendChild(makeQPage(pid,pageIdx,q,i,critQs.length,d.name,pageIdx-1,pageIdx+1));
+      pageIdx++;
+    });
+  });
+
+  idxMap['resultPage']=totalPages;
+  container.appendChild(makeResultPage('resultPage',totalPages,totalPages-1));
+  updateProgress(0);
+}
+
+function makeNavBack(prevIdx){
+  return`<button class="btn-back" onclick="goTo(${prevIdx})"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>`;
+}
+
+function makeQPage(pid,pIdx,q,qNum,qTotal,secLabel,prevIdx,nextIdx){
+  const div=document.createElement('div');
+  div.className='page hidden';div.id=pid;
+  const isLast=(nextIdx>totalPages||(nextIdx===totalPages));
+  div.innerHTML=`
+    <div class="page-counter" id="ctr_${pid}"></div>
+    <div class="page-body" style="padding-bottom:1rem">
+      <div class="q-section-label">${secLabel} · ${qNum+1} / ${qTotal}</div>
+      <div class="q-instruction">請比較兩個準則的相對重要性<br><span style="font-size:11px;color:var(--ink3)">滑桿靠左=左側較重要，靠右=右側較重要，置中=相等</span></div>
+      <div class="pair-wrap">
+        <div class="pair-box" id="lb_${pid}">${q.left}</div>
+        <div class="vs-dot">VS</div>
+        <div class="pair-box" id="rb_${pid}">${q.right}</div>
+      </div>
+      <div id="bf_${pid}" style="margin:0.5rem 0 0.25rem"></div>
+      <div class="slider-outer">
+        <div class="slider-dir"><span class="dl">← ${q.left.length>8?q.left.slice(0,6)+'…':q.left} 較重要</span><span class="dr">${q.right.length>8?q.right.slice(0,6)+'…':q.right} 較重要 →</span></div>
+        <input type="range" min="1" max="9" step="1" value="5" id="sl_${pid}" oninput="onSlide('${pid}','${q.key}',this.value)"/>
+        <div class="scale-nums"><span>9</span><span>8</span><span>7</span><span>6</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
+      </div>
+      <div class="chip-result" id="ch_${pid}"></div>
+      <div class="story-box"><div class="story-lbl">💬 這個選擇代表</div><div id="st_${pid}"></div></div>
+      <div class="explain-box"><div class="explain-lbl">📌 準則說明</div><div id="ex_${pid}">${getExplain(q)}</div></div>
+    </div>
+    <div class="page-footer">
+      <div class="nav-row">
+        ${makeNavBack(prevIdx)}
+        <button class="btn-next-main" onclick="submitQ('${pid}','${q.key}',${nextIdx})">${nextIdx>=totalPages?'完成':'下一題'}</button>
+      </div>
+    </div>`;
+  // init display after DOM insert
+  setTimeout(()=>initQDisplay(pid,q,5),0);
+  return div;
+}
+
+function makeCritIntroPage(pid,pIdx,d,prevIdx,nextIdx){
+  const div=document.createElement('div');
+  div.className='page hidden';div.id=pid;
+  const critRows=d.c.map(c=>`<div class="crit-item"><div class="crit-item-name">${c}</div><div class="crit-item-desc">${CRIT_DESC[c]||''}</div></div>`).join('');
+  div.innerHTML=`
+    <div class="page-counter" id="ctr_${pid}"></div>
+    <div class="page-body">
+      <div class="sec-chip">準則比較</div>
+      <div class="page-title">${d.name}</div>
+      <div class="page-subtitle">${DIM_DESC[d.name]||''}</div>
+      <div class="page-subtitle" style="margin-bottom:0.75rem">接下來請您比較此構面下 <strong>${d.c.length} 個準則</strong> 的相對重要性，共 ${pairs(d.c).length} 題。</div>
+      <div class="crit-intro-card">
+        <div class="crit-intro-header">各準則說明</div>
+        <div class="crit-intro-body">${critRows}</div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <div class="nav-row">
+        ${makeNavBack(prevIdx)}
+        <button class="btn-next-main" onclick="goTo(${nextIdx})">開始作答</button>
+      </div>
+    </div>`;
+  return div;
+}
+
+function makeResultPage(pid,pIdx,prevIdx){
+  const div=document.createElement('div');
+  div.className='page hidden';div.id=pid;
+  div.innerHTML=`
+    <div class="page-body">
+      <div class="success-icon">✅</div>
+      <div class="page-title" style="text-align:center">填答完成！</div>
+      <div class="page-subtitle" style="text-align:center;margin-bottom:1.25rem">感謝您的寶貴意見，以下是您的填答摘要。</div>
+      <div id="summaryContent"></div>
+    </div>
+    <div class="page-footer">
+      <button class="export-btn" id="exportBtn" onclick="doExport()">匯出 Word 問卷檔案</button>
+      <button class="restart-btn" onclick="doRestart()">重新填答</button>
+    </div>`;
+  return div;
+}
+
+function initQDisplay(pid,q,v){
+  const el=document.getElementById('sl_'+pid);
+  if(!el)return;
+  const stored=answers[q.key]||5;
+  el.value=stored;
+  updateQDisplay(pid,q,stored);
+}
+
+function scaleNameBoth(score){
+  // both sides: score 9=超強, 8=極強, 7=頗強, 6=稍強, 5=相等, 4=稍弱, 3=頗弱, 2=極弱, 1=超弱
+  return['','超弱','極弱','頗弱','稍弱','相等','稍強','頗強','極強','超強'][score]||'';
+}
+function renderButterfly(pid,q,v){
+  const el=document.getElementById('bf_'+pid);
+  if(!el)return;
+  v=parseInt(v);
+  const{left:ls,right:rs}=toScores(v);
+  const W=el.offsetWidth||320;
+  const H=58;
+  const cx=W/2;
+  const maxBar=(W/2)-56;
+  const neutral=v===5;
+  const lw=Math.round((ls/9)*maxBar);
+  const rw=Math.round((rs/9)*maxBar);
+  const lStrong=ls>rs;
+  const lCol=neutral?'#888780':lStrong?'#3D5A80':'#85B7EB';
+  const rCol=neutral?'#888780':!lStrong?'#2D6A4F':'#9FE1CB';
+  const lLabel=neutral?'相等':scaleNameBoth(ls);
+  const rLabel=neutral?'相等':scaleNameBoth(rs);
+  el.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">
+    <line x1="${cx}" y1="4" x2="${cx}" y2="${H-8}" stroke="#D3D1C7" stroke-width="1.5"/>
+    <rect x="${cx-lw}" y="16" width="${lw}" height="22" fill="${lCol}" rx="3"/>
+    <rect x="${cx+1}" y="16" width="${rw}" height="22" fill="${rCol}" rx="3"/>
+    <text x="${cx-lw-5}" y="31" text-anchor="end" font-size="13" font-weight="600" fill="${lCol}" font-family="sans-serif">${ls}</text>
+    <text x="${cx+rw+5}" y="31" text-anchor="start" font-size="13" font-weight="600" fill="${rCol}" font-family="sans-serif">${rs}</text>
+    <text x="${cx-lw-5}" y="50" text-anchor="end" font-size="11" fill="${lCol}" font-family="sans-serif">${lLabel}</text>
+    <text x="${cx+rw+5}" y="50" text-anchor="start" font-size="11" fill="${rCol}" font-family="sans-serif">${rLabel}</text>
+  </svg>`;
+}
+
+function updateQDisplay(pid,q,v){
+  v=parseInt(v);
+  const{left:ls,right:rs}=toScores(v);
+  const lb=document.getElementById('lb_'+pid),rb=document.getElementById('rb_'+pid);
+  if(!lb)return;
+  lb.className='pair-box'+(v<5?' hi-left':'');
+  rb.className='pair-box'+(v>5?' hi-right':'');
+  let chip;
+  if(v===5)chip='相等（5：5）— 兩者重要性相同';
+  else if(v<5)chip=`${scaleName(ls)}（${ls}：${rs}）— 左側「${q.left}」較重要`;
+  else chip=`${scaleName(rs)}（${ls}：${rs}）— 右側「${q.right}」較重要`;
+  const ch=document.getElementById('ch_'+pid);if(ch)ch.textContent=chip;
+  const st=document.getElementById('st_'+pid);if(st)st.textContent=getStory(q,v)||'請拖動滑桿選擇';
+  renderButterfly(pid,q,v);
+}
+
+function onSlide(pid,key,v){
+  answers[key]=parseInt(v);
+  const q=questions.find(x=>x.key===key);
+  if(q)updateQDisplay(pid,q,v);
+}
+
+function submitQ(pid,key,nextIdx){
+  const sl=document.getElementById('sl_'+pid);
+  if(sl)answers[key]=parseInt(sl.value);
+  if(nextIdx<totalPages){goTo(nextIdx);}
+  else{buildSummary();goTo(totalPages);}
+}
+
+// =================== NAVIGATION ===================
+function goTo(idx){
+  // Hide current
+  const pages=document.querySelectorAll('.page');
+  pages.forEach(p=>{
+    const pid=parseInt(p.id.replace('p',''))||0;
+    if(p.id==='resultPage')p.classList.add(idx>currentPage?'slide-left':'hidden');
+    else if(!isNaN(parseInt(p.dataset.idx))){}
+    p.classList.remove('hidden','slide-left');
+    if(p.id!==getPageId(idx)){
+      p.classList.add(idx>currentPage?'slide-left':'hidden');
+    }
+  });
+  currentPage=idx;
+  const targetId=getPageId(idx);
+  const target=document.getElementById(targetId);
+  if(target){
+    target.classList.remove('hidden','slide-left');
+    target.scrollTop=0;
+    // Re-init slider if Q page
+    const key=Object.keys(pageMap).find(k=>pageMap[k]===idx);
+    if(key){
+      const q=questions.find(x=>x.key===key);
+      if(q){const pid=targetId;const el=document.getElementById('sl_'+pid);if(el){el.value=answers[key]||5;updateQDisplay(pid,q,answers[key]||5);}}
+    }
+  }
+  updateProgress(idx);
+}
+
+function getPageId(idx){
+  if(idx===0)return'p0';
+  if(idx===1)return'p1';
+  if(idx===2)return'p2';
+  if(idx===3)return'p3';
+  if(idx===totalPages)return'resultPage';
+  // Check idxMap for intro pages (ci_*)
+  const found=Object.keys(idxMap).find(k=>idxMap[k]===idx);
+  if(found)return found;
+  return'qp'+idx;
+}
+
+function updateProgress(idx){
+  // For Q pages: show answer progress (answered/24)
+  const answered=Object.keys(answers).length;
+  const inQSection=idx>=4&&idx<totalPages;
+  const pct=inQSection?(answered/TOTAL_Q)*100:(idx<=3?0:100);
+  document.getElementById('progFill').style.width=Math.min(pct,100)+'%';
+  // Show Q counter only during Q section
+  const qBar=document.getElementById('qProgressBar');
+  if(qBar)qBar.style.display=inQSection?'flex':'none';
+  if(qBar&&inQSection)qBar.textContent='已完成 '+answered+' / '+TOTAL_Q+' 題';
+}
+
+// =================== VALIDATION ===================
+function validateBasic(){
+  const n=document.getElementById('inputName').value.trim();
+  const c=document.getElementById('inputCompany').value.trim();
+  let ok=true;
+  document.getElementById('inputName').classList.toggle('error',!n);
+  document.getElementById('errName').classList.toggle('show',!n);
+  document.getElementById('inputCompany').classList.toggle('error',!c);
+  document.getElementById('errCompany').classList.toggle('show',!c);
+  if(!n||!c)return;
+  userName=n;userCompany=c;
+  goTo(3);
+}
+
+// =================== SUMMARY & EXPORT ===================
+function buildSummary(){
+  const el=document.getElementById('summaryContent');
+  if(!el)return;
+  let html='';
+  let lastSec='';
+  questions.forEach(q=>{
+    if(q.sec!==lastSec){lastSec=q.sec;html+=`<div class="result-section">${q.sec}</div>`;}
+    const v=answers[q.key]||5,{left:ls,right:rs}=toScores(v);
+    const label=v===5?'相等 5：5':(v<5?`${scaleName(ls)} ${ls}：${rs}`:`${scaleName(rs)} ${ls}：${rs}`);
+    html+=`<div class="result-row"><span class="result-pair">${q.left} vs ${q.right}</span><span class="result-val">${label}</span></div>`;
+  });
+  el.innerHTML=html;
+}
+
+function doExport(){
+  const btn=document.getElementById('exportBtn');
+  btn.textContent='產生中...';btn.disabled=true;
+  const colH=['超弱\n1：9','極弱\n2：8','頗弱\n3：7','稍弱\n4：6','相等\n5：5','稍強\n6：4','頗強\n7：3','極強\n8：2','超強\n9：1'];
+  const secs=[...new Set(questions.map(q=>q.sec))];
+  let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+body{font-family:'標楷體',serif;font-size:12pt;margin:2cm}
+h1{font-size:16pt;text-align:center;margin-bottom:6pt;line-height:1.5}
+h2{font-size:13pt;margin:14pt 0 6pt}
+p{margin:3pt 0;font-size:11pt}
+table{width:100%;border-collapse:collapse;margin-bottom:10pt;font-size:10pt}
+th{background:#3D5A80;color:white;border:1px solid #000;padding:4pt 2pt;text-align:center;font-weight:bold;white-space:pre-line;font-size:9pt}
+td{border:1px solid #000;padding:4pt;text-align:center;vertical-align:middle}
+td.crit{text-align:left;padding-left:5pt}
+td.note{text-align:left;padding-left:5pt;font-size:9pt;color:#555;border-top:none}
+</style></head><body>
+<h1>探討電子組裝代工業導入人工智慧物聯網之關鍵成功因素研究問卷<br>（第二份 — Fuzzy AHP 成對比較）</h1>
+<p>填答者姓名：${userName}　　任職公司：${userCompany}　　填答日期：${new Date().toLocaleDateString('zh-TW')}</p>`;
+  let qn=1;
+  secs.forEach(sec=>{
+    const sr=questions.filter(q=>q.sec===sec);
+    html+=`<h2>${qn++}、${sec==='構面比較'?'構面兩兩比較 — 請比較各構面間的相對重要性':'「'+sec+'」準則兩兩比較'}</h2>
+<table><thead><tr><th style="width:22%">左側準則</th>`;
+    colH.forEach(h=>html+=`<th style="width:6.2%">${h}</th>`);
+    html+=`<th style="width:22%">右側準則</th></tr></thead><tbody>`;
+    sr.forEach(q=>{
+      const v=answers[q.key]||5,{left:ls,right:rs}=toScores(v);
+      html+=`<tr><td class="crit">${q.left}</td>`;
+      const checkCol=10-v;for(let i=1;i<=9;i++)html+=`<td>${checkCol===i?'✓':''}</td>`;
+      html+=`<td class="crit">${q.right}</td></tr>`;
+      const note=v===5?`相等（${ls}：${rs}）`:v<5?`「${q.left}」${scaleName(ls)}（${ls}：${rs}），左側較重要`:`「${q.right}」${scaleName(rs)}（${ls}：${rs}），右側較重要`;
+      html+=`<tr><td colspan="11" class="note" style="border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;border-top:none">→ ${note}</td></tr>`;
+    });
+    html+=`</tbody></table>`;
+  });
+  html+=`<p style="text-align:center;margin-top:20pt">【問卷結束，感謝您撥空填答！】</p></body></html>`;
+  try{
+    const blob=new Blob([html],{type:'application/msword;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=`AHP問卷_${userName}_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.doc`;
+    a.click();URL.revokeObjectURL(url);
+    btn.textContent='匯出成功！';
+    setTimeout(()=>{btn.textContent='匯出 Word 問卷檔案';btn.disabled=false;},2500);
+  }catch(e){btn.textContent='匯出失敗，請重試';btn.disabled=false;}
+}
+
+function doRestart(){
+  answers={};userName='';userCompany='';
+  document.getElementById('inputName').value='';
+  document.getElementById('inputCompany').value='';
+  goTo(0);
+}
+
+// =================== INIT ===================
+buildPages();
+goTo(0);
+</script>
+</body>
+</html>
