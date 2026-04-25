@@ -76,6 +76,10 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:'Noto
 /* PROGRESS */
 .prog-wrap{height:3px;background:var(--paper3);flex-shrink:0}
 .prog-fill{height:3px;background:var(--accent);transition:width 0.4s cubic-bezier(.4,0,.2,1)}
+.q-prog-wrap{background:var(--paper2);border-bottom:1px solid var(--paper3);flex-shrink:0;padding:10px 1.25rem 8px}
+.q-prog-bar-bg{height:4px;background:var(--paper3);border-radius:2px;overflow:hidden}
+.q-prog-bar-fill{height:4px;background:var(--accent);border-radius:2px;transition:width 0.35s}
+.q-prog-text{font-size:11px;color:var(--ink3);text-align:right;margin-top:4px}
 .page-counter{font-size:11px;color:var(--ink3);padding:0.6rem 1.25rem 0;text-align:right;flex-shrink:0}
 
 /* SECTION HEADER */
@@ -141,7 +145,9 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:'Noto
 .slider-outer{margin:0.75rem 0 0.5rem}
 .slider-dir{display:flex;justify-content:space-between;font-size:10px;font-weight:600;margin-bottom:6px}
 .slider-dir .dl{color:var(--accent)}.slider-dir .dr{color:var(--green)}
-input[type=range]{width:100%;height:5px;accent-color:var(--accent);cursor:pointer;display:block}
+input[type=range]{width:100%;height:6px;accent-color:var(--accent);cursor:pointer;display:block;-webkit-appearance:none;appearance:none;background:var(--paper3);border-radius:3px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 2px 6px rgba(61,90,128,0.35)}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--accent);cursor:pointer;border:none;box-shadow:0 2px 6px rgba(61,90,128,0.35)}
 .scale-nums{display:flex;justify-content:space-between;margin-top:5px}
 .scale-nums span{font-size:10px;color:var(--ink3);width:11.1%;text-align:center}
 .chip-result{margin-top:0.875rem;padding:10px 14px;border-radius:var(--r2);
@@ -171,6 +177,11 @@ input[type=range]{width:100%;height:5px;accent-color:var(--accent);cursor:pointe
   color:#fff;font-size:15px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;
   box-shadow:0 4px 16px rgba(61,90,128,0.3);transition:transform 0.15s}
 .export-btn:active{transform:scale(0.97)}
+.email-status{width:100%;padding:11px 14px;border-radius:var(--r2);font-size:13px;text-align:center;margin-bottom:0.75rem;line-height:1.5}
+.email-status a{color:inherit;font-weight:600}
+.email-status.sending{background:rgba(61,90,128,0.08);color:var(--accent)}
+.email-status.success{background:rgba(45,106,79,0.1);color:var(--green)}
+.email-status.fail{background:rgba(155,34,38,0.08);color:var(--red)}
 .restart-btn{width:100%;padding:11px;border-radius:var(--r);border:1.5px solid var(--paper3);
   background:transparent;font-size:14px;font-family:'Noto Sans TC',sans-serif;
   cursor:pointer;color:var(--ink3);margin-top:8px}
@@ -181,11 +192,12 @@ input[type=range]{width:100%;height:5px;accent-color:var(--accent);cursor:pointe
   color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:22px;margin-right:6px;flex-shrink:0}
 .success-icon{font-size:48px;text-align:center;margin:1rem 0}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("-iZNeQemVvPcGmbYg");</script>
 </head>
 <body>
 <div id="root">
-  <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-  <div id="qProgressBar" style="display:none;font-size:11px;color:#7B7B9A;padding:4px 1.25rem 0;justify-content:flex-end"></div>
+  <!-- progress moved inside Q pages -->
 
   <!-- PAGE 0: COVER -->
   <div class="page" id="p0">
@@ -193,7 +205,7 @@ input[type=range]{width:100%;height:5px;accent-color:var(--accent);cursor:pointe
     <div class="page-body">
       <div class="cover-header">
         <div class="cover-badge">🎓 國立雲林科技大學 · 資訊管理研究所</div>
-        <div class="cover-title">探討電子組裝代工業導入<span>人工智慧物聯網</span>之關鍵成功因素研究問卷</div>
+        <div class="cover-title" style="color:#1A1A2E">探討電子組裝代工業導入<span style="color:#1A1A2E">人工智慧物聯網</span>之關鍵成功因素研究問卷</div>
         <div class="cover-divider"></div>
       </div>
       <div class="cover-letter">
@@ -206,7 +218,7 @@ input[type=range]{width:100%;height:5px;accent-color:var(--accent);cursor:pointe
       <div class="cover-sig">
         <div class="sig-row"><span class="sig-label">研究單位</span><span class="sig-val">國立雲林科技大學　資訊管理研究所</span></div>
         <div class="sig-row"><span class="sig-label">指導教授</span><span class="sig-val">陳昭宏　副教授兼任系主任　博士</span></div>
-        <div class="sig-row"><span class="sig-label">研　究　生</span><span class="sig-val">陳勁諺　敬上</span></div>
+        <div class="sig-row"><span class="sig-label">研　究　生</span><span class="sig-val">陳勁諺</span></div>
         <div class="cover-email">✉ kevin9810twtw@gmail.com</div>
       </div>
       <div class="cover-footer-space"></div>
@@ -481,6 +493,11 @@ function makeQPage(pid,pIdx,q,qNum,qTotal,secLabel,prevIdx,nextIdx){
   div.innerHTML=`
     <div class="page-counter" id="ctr_${pid}"></div>
     <div class="page-body" style="padding-bottom:1rem">
+      <div class="q-prog-wrap">
+        <div class="q-prog-bar-bg"><div class="q-prog-bar-fill" id="qpb_${pid}"></div></div>
+        <div class="q-prog-text" id="qpt_${pid}">已完成 0 / ${TOTAL_Q} 題</div>
+      </div>
+      <div style="padding:0 1.25rem;margin-top:0.75rem">
       <div class="q-section-label">${secLabel} · ${qNum+1} / ${qTotal}</div>
       <div class="q-instruction">請比較兩個準則的相對重要性<br><span style="font-size:11px;color:var(--ink3)">滑桿靠左=左側較重要，靠右=右側較重要，置中=相等</span></div>
       <div class="pair-wrap">
@@ -497,6 +514,8 @@ function makeQPage(pid,pIdx,q,qNum,qTotal,secLabel,prevIdx,nextIdx){
       <div class="chip-result" id="ch_${pid}"></div>
       <div class="story-box"><div class="story-lbl">💬 這個選擇代表</div><div id="st_${pid}"></div></div>
       <div class="explain-box"><div class="explain-lbl">📌 準則說明</div><div id="ex_${pid}">${getExplain(q)}</div></div>
+    </div>
+      </div>
     </div>
     <div class="page-footer">
       <div class="nav-row">
@@ -545,7 +564,8 @@ function makeResultPage(pid,pIdx,prevIdx){
       <div id="summaryContent"></div>
     </div>
     <div class="page-footer">
-      <button class="export-btn" id="exportBtn" onclick="doExport()">匯出 Word 問卷檔案</button>
+      <div id="emailStatus" class="email-status sending">📨 結果寄送中，請稍候...</div>
+      <button class="export-btn" id="exportBtn" onclick="doExport()">儲存 PDF</button>
       <button class="restart-btn" onclick="doRestart()">重新填答</button>
     </div>`;
   return div;
@@ -559,10 +579,7 @@ function initQDisplay(pid,q,v){
   updateQDisplay(pid,q,stored);
 }
 
-function scaleNameBoth(score){
-  // both sides: score 9=超強, 8=極強, 7=頗強, 6=稍強, 5=相等, 4=稍弱, 3=頗弱, 2=極弱, 1=超弱
-  return['','超弱','極弱','頗弱','稍弱','相等','稍強','頗強','極強','超強'][score]||'';
-}
+function scoreLabel(s){return['','超弱','極弱','頗弱','稍弱','相等','稍強','頗強','極強','超強'][s]||'';}
 function renderButterfly(pid,q,v){
   const el=document.getElementById('bf_'+pid);
   if(!el)return;
@@ -571,23 +588,21 @@ function renderButterfly(pid,q,v){
   const W=el.offsetWidth||320;
   const H=58;
   const cx=W/2;
-  const maxBar=(W/2)-56;
+  const maxBar=(W/2)-60;
   const neutral=v===5;
   const lw=Math.round((ls/9)*maxBar);
   const rw=Math.round((rs/9)*maxBar);
   const lStrong=ls>rs;
   const lCol=neutral?'#888780':lStrong?'#3D5A80':'#85B7EB';
   const rCol=neutral?'#888780':!lStrong?'#2D6A4F':'#9FE1CB';
-  const lLabel=neutral?'相等':scaleNameBoth(ls);
-  const rLabel=neutral?'相等':scaleNameBoth(rs);
   el.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">
     <line x1="${cx}" y1="4" x2="${cx}" y2="${H-8}" stroke="#D3D1C7" stroke-width="1.5"/>
     <rect x="${cx-lw}" y="16" width="${lw}" height="22" fill="${lCol}" rx="3"/>
     <rect x="${cx+1}" y="16" width="${rw}" height="22" fill="${rCol}" rx="3"/>
     <text x="${cx-lw-5}" y="31" text-anchor="end" font-size="13" font-weight="600" fill="${lCol}" font-family="sans-serif">${ls}</text>
     <text x="${cx+rw+5}" y="31" text-anchor="start" font-size="13" font-weight="600" fill="${rCol}" font-family="sans-serif">${rs}</text>
-    <text x="${cx-lw-5}" y="50" text-anchor="end" font-size="11" fill="${lCol}" font-family="sans-serif">${lLabel}</text>
-    <text x="${cx+rw+5}" y="50" text-anchor="start" font-size="11" fill="${rCol}" font-family="sans-serif">${rLabel}</text>
+    <text x="${cx-lw-5}" y="50" text-anchor="end" font-size="11" fill="${lCol}" font-family="sans-serif">${scoreLabel(ls)}</text>
+    <text x="${cx+rw+5}" y="50" text-anchor="start" font-size="11" fill="${rCol}" font-family="sans-serif">${scoreLabel(rs)}</text>
   </svg>`;
 }
 
@@ -611,6 +626,7 @@ function onSlide(pid,key,v){
   answers[key]=parseInt(v);
   const q=questions.find(x=>x.key===key);
   if(q)updateQDisplay(pid,q,v);
+  refreshProgress();
 }
 
 function submitQ(pid,key,nextIdx){
@@ -622,28 +638,23 @@ function submitQ(pid,key,nextIdx){
 
 // =================== NAVIGATION ===================
 function goTo(idx){
-  // Hide current
-  const pages=document.querySelectorAll('.page');
-  pages.forEach(p=>{
-    const pid=parseInt(p.id.replace('p',''))||0;
-    if(p.id==='resultPage')p.classList.add(idx>currentPage?'slide-left':'hidden');
-    else if(!isNaN(parseInt(p.dataset.idx))){}
-    p.classList.remove('hidden','slide-left');
-    if(p.id!==getPageId(idx)){
+  const targetId=getPageId(idx);
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p=>{
+    if(p.id===targetId){
+      p.classList.remove('hidden','slide-left');
+    } else {
       p.classList.add(idx>currentPage?'slide-left':'hidden');
     }
   });
   currentPage=idx;
-  const targetId=getPageId(idx);
   const target=document.getElementById(targetId);
   if(target){
-    target.classList.remove('hidden','slide-left');
     target.scrollTop=0;
-    // Re-init slider if Q page
     const key=Object.keys(pageMap).find(k=>pageMap[k]===idx);
     if(key){
       const q=questions.find(x=>x.key===key);
-      if(q){const pid=targetId;const el=document.getElementById('sl_'+pid);if(el){el.value=answers[key]||5;updateQDisplay(pid,q,answers[key]||5);}}
+      if(q){const el=document.getElementById('sl_'+targetId);if(el){el.value=answers[key]||5;updateQDisplay(targetId,q,answers[key]||5);}}
     }
   }
   updateProgress(idx);
@@ -662,15 +673,18 @@ function getPageId(idx){
 }
 
 function updateProgress(idx){
-  // For Q pages: show answer progress (answered/24)
   const answered=Object.keys(answers).length;
-  const inQSection=idx>=4&&idx<totalPages;
-  const pct=inQSection?(answered/TOTAL_Q)*100:(idx<=3?0:100);
-  document.getElementById('progFill').style.width=Math.min(pct,100)+'%';
-  // Show Q counter only during Q section
-  const qBar=document.getElementById('qProgressBar');
-  if(qBar)qBar.style.display=inQSection?'flex':'none';
-  if(qBar&&inQSection)qBar.textContent='已完成 '+answered+' / '+TOTAL_Q+' 題';
+  const pct=Math.min((answered/TOTAL_Q)*100,100);
+  // Update all Q page progress bars
+  document.querySelectorAll('[id^="qpb_"]').forEach(el=>{
+    el.style.width=pct+'%';
+  });
+  document.querySelectorAll('[id^="qpt_"]').forEach(el=>{
+    el.textContent='已完成 '+answered+' / '+TOTAL_Q+' 題';
+  });
+}
+function refreshProgress(){
+  updateProgress(currentPage);
 }
 
 // =================== VALIDATION ===================
@@ -689,6 +703,8 @@ function validateBasic(){
 
 // =================== SUMMARY & EXPORT ===================
 function buildSummary(){
+  emailSentThisSession=false;
+  setTimeout(autoSendEmail,800);
   const el=document.getElementById('summaryContent');
   if(!el)return;
   let html='';
@@ -702,21 +718,21 @@ function buildSummary(){
   el.innerHTML=html;
 }
 
-function doExport(){
-  const btn=document.getElementById('exportBtn');
-  btn.textContent='產生中...';btn.disabled=true;
+function buildPrintHTML(){
   const colH=['超弱\n1：9','極弱\n2：8','頗弱\n3：7','稍弱\n4：6','相等\n5：5','稍強\n6：4','頗強\n7：3','極強\n8：2','超強\n9：1'];
   const secs=[...new Set(questions.map(q=>q.sec))];
   let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-body{font-family:'標楷體',serif;font-size:12pt;margin:2cm}
-h1{font-size:16pt;text-align:center;margin-bottom:6pt;line-height:1.5}
-h2{font-size:13pt;margin:14pt 0 6pt}
-p{margin:3pt 0;font-size:11pt}
-table{width:100%;border-collapse:collapse;margin-bottom:10pt;font-size:10pt}
-th{background:#3D5A80;color:white;border:1px solid #000;padding:4pt 2pt;text-align:center;font-weight:bold;white-space:pre-line;font-size:9pt}
-td{border:1px solid #000;padding:4pt;text-align:center;vertical-align:middle}
-td.crit{text-align:left;padding-left:5pt}
-td.note{text-align:left;padding-left:5pt;font-size:9pt;color:#555;border-top:none}
+@page{size:A4 landscape;margin:1.5cm}
+body{font-family:'標楷體',serif;font-size:11pt;margin:0;color:#000}
+h1{font-size:14pt;text-align:center;margin-bottom:6pt;line-height:1.5;color:#000}
+h2{font-size:11.5pt;margin:10pt 0 4pt;color:#000}
+p{margin:3pt 0;font-size:10pt}
+table{width:100%;border-collapse:collapse;margin-bottom:8pt;font-size:8.5pt;table-layout:fixed}
+th{background:#3D5A80;color:#fff;border:1px solid #2a3f5a;padding:3pt 1pt;text-align:center;font-weight:bold;white-space:pre-line;font-size:7.5pt;line-height:1.3}
+td{border:1px solid #888;padding:3pt;text-align:center;vertical-align:middle}
+td.crit{text-align:left;padding-left:4pt;font-size:8.5pt}
+td.note{text-align:left;padding-left:4pt;font-size:8pt;color:#444;background:#f9f9f9}
+@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style></head><body>
 <h1>探討電子組裝代工業導入人工智慧物聯網之關鍵成功因素研究問卷<br>（第二份 — Fuzzy AHP 成對比較）</h1>
 <p>填答者姓名：${userName}　　任職公司：${userCompany}　　填答日期：${new Date().toLocaleDateString('zh-TW')}</p>`;
@@ -724,36 +740,88 @@ td.note{text-align:left;padding-left:5pt;font-size:9pt;color:#555;border-top:non
   secs.forEach(sec=>{
     const sr=questions.filter(q=>q.sec===sec);
     html+=`<h2>${qn++}、${sec==='構面比較'?'構面兩兩比較 — 請比較各構面間的相對重要性':'「'+sec+'」準則兩兩比較'}</h2>
-<table><thead><tr><th style="width:22%">左側準則</th>`;
-    colH.forEach(h=>html+=`<th style="width:6.2%">${h}</th>`);
-    html+=`<th style="width:22%">右側準則</th></tr></thead><tbody>`;
+<table><colgroup><col style="width:21%">${colH.map(()=>'<col style="width:6.4%">').join('')}<col style="width:21%"></colgroup>
+<thead><tr><th>左側準則</th>`;
+    colH.forEach(h=>html+=`<th>${h}</th>`);
+    html+=`<th>右側準則</th></tr></thead><tbody>`;
     sr.forEach(q=>{
       const v=answers[q.key]||5,{left:ls,right:rs}=toScores(v);
       html+=`<tr><td class="crit">${q.left}</td>`;
       const checkCol=10-v;for(let i=1;i<=9;i++)html+=`<td>${checkCol===i?'✓':''}</td>`;
       html+=`<td class="crit">${q.right}</td></tr>`;
-      const note=v===5?`相等（${ls}：${rs}）`:v<5?`「${q.left}」${scaleName(ls)}（${ls}：${rs}），左側較重要`:`「${q.right}」${scaleName(rs)}（${ls}：${rs}），右側較重要`;
-      html+=`<tr><td colspan="11" class="note" style="border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;border-top:none">→ ${note}</td></tr>`;
+      const note=v===5?`相等（${ls}：${rs}）`:v<5?`「${q.left}」${scoreLabel(ls)}（${ls}：${rs}），左側較重要`:`「${q.right}」${scoreLabel(rs)}（${ls}：${rs}），右側較重要`;
+      html+=`<tr><td colspan="11" class="note">→ ${note}</td></tr>`;
     });
     html+=`</tbody></table>`;
   });
-  html+=`<p style="text-align:center;margin-top:20pt">【問卷結束，感謝您撥空填答！】</p></body></html>`;
+  html+=`<p style="text-align:center;margin-top:14pt">【問卷結束，感謝您撥空填答！】</p></body></html>`;
+  return html;
+}
+
+function buildEmailContent(){
+  const secs=[...new Set(questions.map(q=>q.sec))];
+  let text=`填答者：${userName}\n任職公司：${userCompany}\n填答日期：${new Date().toLocaleDateString('zh-TW')}\n\n`;
+  let qn=1;
+  secs.forEach(sec=>{
+    const sr=questions.filter(q=>q.sec===sec);
+    text+=`【${qn++}. ${sec}】\n`;
+    sr.forEach(q=>{
+      const v=answers[q.key]||5,{left:ls,right:rs}=toScores(v);
+      const note=v===5?`相等（${ls}：${rs}）`:v<5?`${q.left} ${scoreLabel(ls)}（${ls}：${rs}）左側較重要`:`${q.right} ${scoreLabel(rs)}（${ls}：${rs}）右側較重要`;
+      text+=`  ${q.left} vs ${q.right}：${note}\n`;
+    });
+    text+='\n';
+  });
+  return text;
+}
+
+let emailSentThisSession=false;
+
+async function autoSendEmail(){
+  if(emailSentThisSession)return;
+  emailSentThisSession=true;
+  const statusEl=document.getElementById('emailStatus');
+  if(statusEl){statusEl.className='email-status sending';statusEl.textContent='📨 結果寄送中，請稍候...';}
   try{
-    const blob=new Blob([html],{type:'application/msword;charset=utf-8'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;a.download=`AHP問卷_${userName}_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.doc`;
-    a.click();URL.revokeObjectURL(url);
-    btn.textContent='匯出成功！';
-    setTimeout(()=>{btn.textContent='匯出 Word 問卷檔案';btn.disabled=false;},2500);
-  }catch(e){btn.textContent='匯出失敗，請重試';btn.disabled=false;}
+    await emailjs.send('service_xvt8h2h','template_55vczyr',{
+      to_email:'kevin9810twtw@gmail.com',
+      respondent:userName,
+      company:userCompany,
+      date:new Date().toLocaleDateString('zh-TW'),
+      content:buildEmailContent(),
+    });
+    if(statusEl){statusEl.className='email-status success';statusEl.textContent='✅ 填答結果已自動寄送至信箱';}
+  }catch(e){
+    emailSentThisSession=false;
+    if(statusEl){
+      statusEl.className='email-status fail';
+      statusEl.innerHTML='⚠️ 寄送失敗，請下載 PDF 並寄至 <a href="mailto:kevin9810twtw@gmail.com">kevin9810twtw@gmail.com</a>';
+    }
+    console.error(e);
+  }
+}
+
+function doExport(){
+  const btn=document.getElementById('exportBtn');
+  btn.textContent='開啟中...';btn.disabled=true;
+  try{
+    const html=buildPrintHTML();
+    const win=window.open('','_blank','width=1100,height=800');
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    btn.textContent='儲存 PDF';btn.disabled=false;
+  }catch(e){btn.textContent='開啟失敗，請重試';btn.disabled=false;}
 }
 
 function doRestart(){
+  if(!confirm('確定要重新填答嗎？所有已填答的資料將會清除。'))return;
   answers={};userName='';userCompany='';
+  emailSentThisSession=false;
   document.getElementById('inputName').value='';
   document.getElementById('inputCompany').value='';
   goTo(0);
+  updateProgress(0);
 }
 
 // =================== INIT ===================
