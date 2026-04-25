@@ -718,42 +718,154 @@ function buildSummary(){
 }
 
 function buildPrintHTML(){
-  const colH=['超弱\n1：9','極弱\n2：8','頗弱\n3：7','稍弱\n4：6','相等\n5：5','稍強\n6：4','頗強\n7：3','極強\n8：2','超強\n9：1'];
+  const colH=['超弱<br>1：9','極弱<br>2：8','頗弱<br>3：7','稍弱<br>4：6','相等<br>5：5','稍強<br>6：4','頗強<br>7：3','極強<br>8：2','超強<br>9：1'];
   const secs=[...new Set(questions.map(q=>q.sec))];
   let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-@page{size:A4 landscape;margin:1.5cm}
-body{font-family:'標楷體',serif;font-size:11pt;margin:0;color:#000}
-h1{font-size:14pt;text-align:center;margin-bottom:6pt;line-height:1.5;color:#000}
-h2{font-size:11.5pt;margin:10pt 0 4pt;color:#000}
-p{margin:3pt 0;font-size:10pt}
-table{width:100%;border-collapse:collapse;margin-bottom:8pt;font-size:8.5pt;table-layout:fixed}
-th{background:#3D5A80;color:#fff;border:1px solid #2a3f5a;padding:3pt 1pt;text-align:center;font-weight:bold;white-space:pre-line;font-size:7.5pt;line-height:1.3}
-td{border:1px solid #888;padding:3pt;text-align:center;vertical-align:middle}
-td.crit{text-align:left;padding-left:4pt;font-size:8.5pt}
-td.note{text-align:left;padding-left:4pt;font-size:8pt;color:#444;background:#f9f9f9}
+@page{size:A4;margin:2.5cm 2cm 2.5cm 2cm}
+body{font-family:'標楷體',serif;font-size:12pt;color:#000;margin:0;line-height:1.75}
+.title{font-size:14pt;font-weight:bold;text-align:center;margin-bottom:20pt;letter-spacing:1pt}
+.body-para{text-indent:2em;margin-bottom:6pt;font-size:12pt;line-height:1.75}
+.closing{margin-top:10pt;margin-bottom:4pt}
+.sig-block{text-align:center;margin:6pt 0}
+.sig-table{margin:0 auto;border:none;font-size:12pt;border-collapse:collapse}
+.sig-table td{border:none;padding:1pt 6pt;text-align:left}
+.contact{margin-top:8pt;font-size:12pt;line-height:1.8}
+.section-title{font-weight:bold;font-size:12pt;margin:14pt 0 4pt}
+.subsection{font-size:12pt;margin:8pt 0 4pt}
+.criteria-table{width:100%;border-collapse:collapse;margin:6pt 0 10pt;font-size:11pt}
+.criteria-table th{border:1px solid #000;padding:4pt 6pt;text-align:center;font-weight:bold}
+.criteria-table td{border:1px solid #000;padding:4pt 6pt;text-align:center;vertical-align:middle}
+.desc-text{font-size:12pt;line-height:1.75;margin:6pt 0 10pt;text-indent:2em}
+.example-title{font-size:12pt;font-weight:bold;text-align:center;margin:10pt 0 4pt}
+.ahp-table{width:100%;border-collapse:collapse;margin:4pt 0 6pt;font-size:10.5pt}
+.ahp-table th{border:1px solid #000;padding:3pt 1pt;text-align:center;font-weight:bold;line-height:1.3;white-space:nowrap}
+.ahp-table td{border:1px solid #000;padding:4pt 1pt;text-align:center;vertical-align:middle}
+.ahp-table td.crit{text-align:center;padding:4pt 3pt}
+.example-desc{font-size:11pt;line-height:1.75;margin:4pt 0 10pt}
+.q-title{font-size:12pt;font-weight:bold;margin:14pt 0 4pt}
+.result-table{width:100%;border-collapse:collapse;margin:4pt 0 8pt;font-size:10.5pt;page-break-inside:avoid}
+.result-table th{border:1px solid #000;padding:3pt 1pt;text-align:center;font-weight:bold;line-height:1.3}
+.result-table td{border:1px solid #000;padding:5pt 1pt;text-align:center;vertical-align:middle}
+.result-table td.crit{text-align:center;padding:5pt 3pt;font-size:10pt}
+.note-row td{border:1px solid #000;text-align:left;padding:3pt 6pt;font-size:10pt;color:#333;background:#f9f9f9;border-top:none}
+.page-break{page-break-before:always}
+.end-note{text-align:center;font-size:12pt;margin-top:20pt;font-weight:bold}
 @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style></head><body>
-<h1>探討電子組裝代工業導入人工智慧物聯網之關鍵成功因素研究問卷<br>（第二份 — Fuzzy AHP 成對比較）</h1>
-<p>填答者姓名：${userName}　　任職公司：${userCompany}　　填答日期：${new Date().toLocaleDateString('zh-TW')}</p>`;
+
+<div class="title">附錄二：模糊層級分析法問卷</div>
+
+<p style="margin-bottom:14pt">${userName} 鈞鑒：</p>
+
+<p class="body-para">首先感謝您在第一階段模糊德菲法專家問卷中為我們熱切地回覆問題，並再次懇請您能夠於百忙之中撥冗 10～15 分鐘來填寫下列資料。</p>
+<p class="body-para">本問卷目的是欲將第一階段問卷中針對「電子組裝代工業導入人工智慧物聯網之關鍵成功因素」評估準則，做進一步重要程度之比較，希望藉由您專業、豐富的經驗意見，得到各個準則所代表之權重指標。</p>
+<p class="body-para">問卷所得資料，純粹作為學術研究之用，絕不做商業用途及對外公開，敬請安心填答。再次感謝您的協助。</p>
+<p class="closing">順頌　時祺</p>
+
+<div class="sig-block">
+<table class="sig-table">
+<tr><td colspan="3">國立雲林科技大學　　資訊管理研究所</td></tr>
+<tr><td style="text-align:right;letter-spacing:2pt">副教授兼任系主任：</td><td>陳昭宏</td><td>博士</td></tr>
+<tr><td style="text-align:right">研　　究　　生：</td><td>陳勁諺</td><td>敬上</td></tr>
+</table>
+</div>
+
+<div class="contact">
+<p>聯絡地址：640 雲林縣斗六市文化路38號</p>
+<p>聯絡電話：(09)12260381（陳勁諺）</p>
+<p>E-mail：n11323323@live.yuntech.edu.tw</p>
+</div>
+
+<p class="section-title">一、您的姓名：${userName}　　　任職公司：${userCompany}　　　填答日期：${new Date().toLocaleDateString('zh-TW')}</p>
+
+<p class="section-title">二、填答要領說明。</p>
+<p class="subsection">（一）第一段問卷篩選出之要項如下表。</p>
+
+<table class="criteria-table">
+<thead><tr><th style="width:35%">構面</th><th>準則</th></tr></thead>
+<tbody>
+<tr><td rowspan="4" style="vertical-align:middle">技術整合能力</td><td>設備異質性整合難度</td></tr>
+<tr><td>IT/OT 整合能力</td></tr>
+<tr><td>跨廠區資料串接能力</td></tr>
+<tr><td>技術導入路徑規劃與試點能力</td></tr>
+<tr><td rowspan="4" style="vertical-align:middle">資料品質與標準化</td><td>通訊協定標準化程度</td></tr>
+<tr><td>資料可用性與一致性</td></tr>
+<tr><td>跨系統語意一致性</td></tr>
+<tr><td>資料存取與安全管控</td></tr>
+<tr><td rowspan="2" style="vertical-align:middle">組織管理與策略</td><td>高階主管支持程度</td></tr>
+<tr><td>組織內部推動共識</td></tr>
+<tr><td rowspan="2" style="vertical-align:middle">資源投入與管理</td><td>導入預算充足性</td></tr>
+<tr><td>專責人力與維運能力</td></tr>
+<tr><td>人才能力與培訓</td><td>AIoT 相關技術人員配置充足性</td></tr>
+</tbody>
+</table>
+
+<p class="desc-text">（二）填答說明：本研究評估準則權重訂定，係以模糊分析層級法（Fuzzy AHP）進行研究，請您就若干兩準則間之相對重要性情形，給予比對評估。在本問卷中將各項準則以名義尺度作對偶比對評估，名義尺度為：超弱（1：9）極弱（2：8）、頗弱（3：7）、稍弱（4：6）、相等（5：5）、稍強（6：4）、頗強（7：3）、極強（8：2）、超強（9：1）。請您在您認為的名義尺度上打「✓」。</p>
+
+<p style="font-size:12pt;margin:8pt 0 4pt">舉例一說明如下：</p>
+<p class="example-title">構面：結婚考慮因素</p>
+<table class="ahp-table">
+<thead><tr>
+<th style="width:12%">評估準則</th>
+<th style="width:8%">超弱<br>1：9</th><th style="width:8%">極弱<br>2：8</th>
+<th style="width:8%">頗弱<br>3：7</th><th style="width:8%">稍弱<br>4：6</th>
+<th style="width:8%">相等<br>5：5</th><th style="width:8%">稍強<br>6：4</th>
+<th style="width:8%">頗強<br>7：3</th><th style="width:8%">極強<br>8：2</th>
+<th style="width:8%">超強<br>9：1</th>
+<th style="width:12%">評估準則</th>
+</tr></thead>
+<tbody>
+<tr><td class="crit">愛情</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>✓</td><td></td><td class="crit">麵包</td></tr>
+</tbody></table>
+<p class="example-desc">說明：就以上愛情與麵包兩者而言，填答者認為結婚時愛情與麵包之評比重要性為極強(8:2)，意即愛情為 8 而麵包為 2，愛情比麵包重要。</p>
+
+<p style="font-size:12pt;margin:8pt 0 4pt">舉例二說明如下：</p>
+<p class="example-title">構面：購車考慮因素</p>
+<table class="ahp-table">
+<thead><tr>
+<th style="width:12%">評估準則</th>
+<th style="width:8%">超弱<br>1：9</th><th style="width:8%">極弱<br>2：8</th>
+<th style="width:8%">頗弱<br>3：7</th><th style="width:8%">稍弱<br>4：6</th>
+<th style="width:8%">相等<br>5：5</th><th style="width:8%">稍強<br>6：4</th>
+<th style="width:8%">頗強<br>7：3</th><th style="width:8%">極強<br>8：2</th>
+<th style="width:8%">超強<br>9：1</th>
+<th style="width:12%">評估準則</th>
+</tr></thead>
+<tbody>
+<tr><td class="crit">油耗</td><td></td><td></td><td>✓</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="crit">安全性</td></tr>
+</tbody></table>
+<p class="example-desc">說明：就以上油耗與安全性兩者而言，填答者認為購車時油耗與安全性之評比重要性為頗弱(3:7)，意即油耗為 3 而安全性為 7，相較之下安全性比油耗重要，而油耗評比重要性為頗弱，油耗比安全性不重要。</p>
+
+<div class="page-break"></div>
+<p style="font-size:12pt;font-weight:bold;text-align:center;margin-bottom:14pt">三、【問卷正式開始】</p>`;
+
   let qn=1;
   secs.forEach(sec=>{
     const sr=questions.filter(q=>q.sec===sec);
-    html+=`<h2>${qn++}、${sec==='構面比較'?'構面兩兩比較 — 請比較各構面間的相對重要性':'「'+sec+'」準則兩兩比較'}</h2>
-<table><colgroup><col style="width:21%">${colH.map(()=>'<col style="width:6.4%">').join('')}<col style="width:21%"></colgroup>
-<thead><tr><th>左側準則</th>`;
-    colH.forEach(h=>html+=`<th>${h}</th>`);
-    html+=`<th>右側準則</th></tr></thead><tbody>`;
+    const secTitle=sec==='構面比較'
+      ?`1、您認為下列<strong>構面</strong>對<strong>AIoT 智慧工廠導入障礙評估</strong>而言，其相對重要性為何？`
+      :`${qn+1}、就<strong>${sec}構面</strong>而言，您認為下列評鑑準則，其相對重要性為何？`;
+    html+=`<p class="q-title">${secTitle}</p>
+<table class="result-table"><thead><tr><th style="width:22%">評估準則</th>`;
+    colH.forEach(h=>html+=`<th style="width:6.2%">${h}</th>`);
+    html+=`<th style="width:22%">評估準則</th></tr></thead><tbody>`;
     sr.forEach(q=>{
-      const v=answers[q.key]||5,{left:ls,right:rs}=toScores(v);
+      const v=answers[q.key]||5;
+      const{left:ls,right:rs}=toScores(v);
+      const checkCol=10-v;
       html+=`<tr><td class="crit">${q.left}</td>`;
-      const checkCol=10-v;for(let i=1;i<=9;i++)html+=`<td>${checkCol===i?'✓':''}</td>`;
+      for(let i=1;i<=9;i++) html+=`<td>${checkCol===i?'✓':''}</td>`;
       html+=`<td class="crit">${q.right}</td></tr>`;
-      const note=v===5?`相等（${ls}：${rs}）`:v<5?`「${q.left}」${scoreLabel(ls)}（${ls}：${rs}），左側較重要`:`「${q.right}」${scoreLabel(rs)}（${ls}：${rs}），右側較重要`;
-      html+=`<tr><td colspan="11" class="note">→ ${note}</td></tr>`;
+      const note=v===5
+        ?`相等（${ls}：${rs}）`
+        :v<5?`「${q.left}」${scoreLabel(ls)}（${ls}：${rs}），左側較重要`
+            :`「${q.right}」${scoreLabel(rs)}（${ls}：${rs}），右側較重要`;
+      html+=`<tr class="note-row"><td colspan="11">→ ${note}</td></tr>`;
     });
     html+=`</tbody></table>`;
+    qn++;
   });
-  html+=`<p style="text-align:center;margin-top:14pt">【問卷結束，感謝您撥空填答！】</p></body></html>`;
+  html+=`<p class="end-note">【本問卷到此結束，非常感謝您撥空填答！】</p></body></html>`;
   return html;
 }
 
@@ -773,6 +885,7 @@ function buildEmailContent(){
   });
   return text;
 }
+
 
 let emailSentThisSession=false;
 
@@ -825,15 +938,12 @@ function doRestart(){
 
 // =================== DYNAMIC STORY HEIGHT ===================
 function fixStoryBoxHeights(){
-  // Create a hidden off-screen container to measure all story texts
   const probe=document.createElement('div');
   probe.style.cssText='position:fixed;visibility:hidden;pointer-events:none;'+
     'left:-9999px;top:0;width:calc(100vw - 2.5rem);max-width:460px;'+
     'font-size:12px;line-height:1.8;padding:11px 13px;';
   document.body.appendChild(probe);
-
   let maxH=0;
-  // Collect all story texts from STORIES
   Object.values(STORIES).forEach(s=>{
     ['left','right','equal'].forEach(dir=>{
       probe.textContent=s[dir]||'';
@@ -841,22 +951,16 @@ function fixStoryBoxHeights(){
     });
   });
   document.body.removeChild(probe);
-
-  // Add label height (story-lbl ~20px) + padding top/bottom (22px)
   const totalH=maxH+20+22+4;
-
-  // Apply fixed height to all story boxes
   document.querySelectorAll('.story-box').forEach(el=>{
     el.style.height=totalH+'px';
     el.style.overflow='hidden';
-    el.style.minHeight='';
   });
 }
 
 // =================== INIT ===================
 buildPages();
 goTo(0);
-// Run after paint so DOM is ready
 requestAnimationFrame(()=>requestAnimationFrame(fixStoryBoxHeights));
 </script>
 </body>
