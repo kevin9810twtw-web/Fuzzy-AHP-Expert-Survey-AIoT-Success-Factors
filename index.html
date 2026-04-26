@@ -642,7 +642,12 @@ function attachCardSwipe(pid,key){
     startY=e.touches[0].clientY;
     isDragging=true;
     isHorizontal=null;
+    // Remember slider value at touch start
+    const sl=document.getElementById('sl_'+pid);
+    startVal=sl?parseInt(sl.value):5;
   },{passive:true});
+
+  let startVal=5; // slider value at touchstart
 
   page.addEventListener('touchmove',e=>{
     if(!isDragging)return;
@@ -653,9 +658,10 @@ function attachCardSwipe(pid,key){
     }
     if(!isHorizontal)return; // vertical → page scroll
     e.preventDefault(); // horizontal → control slider
-    // Map finger X position across full screen width to 1~9
-    const pct=Math.max(0,Math.min(1,e.touches[0].clientX/window.innerWidth));
-    const val=Math.round(pct*8)+1;
+    // Relative: full screen width = 8 steps (1~9)
+    const stepPx=window.innerWidth/8;
+    const delta=Math.round(dx/stepPx);
+    const val=Math.max(1,Math.min(9,startVal+delta));
     const sl=document.getElementById('sl_'+pid);
     if(sl){sl.value=val;onSlide(pid,key,val);}
   },{passive:false});
