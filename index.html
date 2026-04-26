@@ -527,6 +527,46 @@ function pairs(arr){const r=[];for(let i=0;i<arr.length;i++)for(let j=i+1;j<arr.
 let questions=[];
 let answers={};
 let userName='',userCompany='';
+const fixedDimPairs=[
+  ['技術整合能力','資料品質與標準化'],
+  ['技術整合能力','組織管理與策略'],
+  ['技術整合能力','資源投入與管理'],
+  ['技術整合能力','人才能力與培訓'],
+  ['資料品質與標準化','組織管理與策略'],
+  ['資料品質與標準化','資源投入與管理'],
+  ['資料品質與標準化','人才能力與培訓'],
+  ['組織管理與策略','資源投入與管理'],
+  ['組織管理與策略','人才能力與培訓'],
+  ['資源投入與管理','人才能力與培訓'],
+];
+function getFixedSecs(){return['構面比較',...DIMS.filter(d=>pairs(d.c).length>0).map(d=>d.name)];}
+const fixedCritPairs={
+  '技術整合能力':[
+    ['設備異質性整合難度','IT/OT 整合能力'],
+    ['設備異質性整合難度','跨廠區資料串接能力'],
+    ['設備異質性整合難度','技術導入路徑規劃與試點能力'],
+    ['IT/OT 整合能力','跨廠區資料串接能力'],
+    ['IT/OT 整合能力','技術導入路徑規劃與試點能力'],
+    ['跨廠區資料串接能力','技術導入路徑規劃與試點能力'],
+  ],
+  '資料品質與標準化':[
+    ['通訊協定標準化程度','資料可用性與一致性'],
+    ['通訊協定標準化程度','跨系統語意一致性'],
+    ['通訊協定標準化程度','資料存取與安全管控'],
+    ['資料可用性與一致性','跨系統語意一致性'],
+    ['資料可用性與一致性','資料存取與安全管控'],
+    ['跨系統語意一致性','資料存取與安全管控'],
+  ],
+};
+function getOrderedQuestions(sec){
+  if(sec==='構面比較'){
+    return fixedDimPairs.map(([a,b])=>questions.find(q=>q.key===`D_${a}_${b}`)).filter(Boolean);
+  }
+  if(fixedCritPairs[sec]){
+    return fixedCritPairs[sec].map(([a,b])=>questions.find(q=>q.key===`${sec}_${a}_${b}`)).filter(Boolean);
+  }
+  return questions.filter(q=>q.sec===sec);
+}
 let pageMap={}; // qIndex -> pageId
 let idxMap={}; // pageId -> pageIdx  (for intro pages too)
 let currentPage=0;
@@ -535,12 +575,44 @@ const TOTAL_Q=24; // fixed: 10 dim + 6+6+1+1=14 crit
 
 function buildStructure(){
   questions=[];
-  // Dim pairs
-  pairs(DIMS.map(d=>d.name)).forEach(([a,b])=>questions.push({type:'dim',sec:'構面比較',left:a,right:b,key:`D_${a}_${b}`}));
-  // Crit pairs per dim
+  // Dim pairs - shuffled order to avoid same dimension appearing consecutively
+  const dimNames=DIMS.map(d=>d.name);
+  const shuffledDimPairs=[
+    [dimNames[0],dimNames[1]], // 技術 vs 資料
+    [dimNames[2],dimNames[3]], // 組織 vs 資源
+    [dimNames[0],dimNames[4]], // 技術 vs 人才
+    [dimNames[1],dimNames[2]], // 資料 vs 組織
+    [dimNames[3],dimNames[4]], // 資源 vs 人才
+    [dimNames[0],dimNames[2]], // 技術 vs 組織
+    [dimNames[1],dimNames[4]], // 資料 vs 人才
+    [dimNames[0],dimNames[3]], // 技術 vs 資源
+    [dimNames[2],dimNames[4]], // 組織 vs 人才
+    [dimNames[1],dimNames[3]], // 資料 vs 資源
+  ];
+  shuffledDimPairs.forEach(([a,b])=>questions.push({type:'dim',sec:'構面比較',left:a,right:b,key:`D_${a}_${b}`}));
+  // Crit pairs per dim - shuffled to avoid consecutive same criterion
+  const shuffledCritPairs={
+    '技術整合能力':[
+      ['設備異質性整合難度','IT/OT 整合能力'],
+      ['跨廠區資料串接能力','技術導入路徑規劃與試點能力'],
+      ['設備異質性整合難度','跨廠區資料串接能力'],
+      ['IT/OT 整合能力','技術導入路徑規劃與試點能力'],
+      ['設備異質性整合難度','技術導入路徑規劃與試點能力'],
+      ['IT/OT 整合能力','跨廠區資料串接能力'],
+    ],
+    '資料品質與標準化':[
+      ['通訊協定標準化程度','資料可用性與一致性'],
+      ['跨系統語意一致性','資料存取與安全管控'],
+      ['通訊協定標準化程度','跨系統語意一致性'],
+      ['資料可用性與一致性','資料存取與安全管控'],
+      ['通訊協定標準化程度','資料存取與安全管控'],
+      ['資料可用性與一致性','跨系統語意一致性'],
+    ],
+  };
   DIMS.forEach(d=>{
     if(d.c.length<2) return;
-    pairs(d.c).forEach(([a,b])=>questions.push({type:'crit',sec:d.name,left:a,right:b,key:`${d.name}_${a}_${b}`,dim:d.name}));
+    const critPs=shuffledCritPairs[d.name]||pairs(d.c);
+    critPs.forEach(([a,b])=>questions.push({type:'crit',sec:d.name,left:a,right:b,key:`${d.name}_${a}_${b}`,dim:d.name}));
   });
 }
 
@@ -885,7 +957,11 @@ function buildSummary(){
   if(!el)return;
   let html='';
   let lastSec='';
-  questions.forEach(q=>{
+  const orderedQ=[
+    ...fixedDimPairs.map(([a,b])=>questions.find(q=>q.key===`D_${a}_${b}`)).filter(Boolean),
+    ...getFixedSecs().filter(s=>s!=='構面比較').flatMap(sec=>getOrderedQuestions(sec))
+  ];
+  orderedQ.forEach(q=>{
     if(q.sec!==lastSec){lastSec=q.sec;html+=`<div class="result-section">${q.sec}</div>`;}
     const v=answers[q.key]||5,{left:ls,right:rs}=toScores(v);
     const label=v===5?'相等 5：5':(v<5?`${scaleName(ls)} ${ls}：${rs}`:`${scaleName(rs)} ${ls}：${rs}`);
@@ -896,7 +972,7 @@ function buildSummary(){
 
 function buildPrintHTML(){
   const colH=['超弱<br>1：9','極弱<br>2：8','頗弱<br>3：7','稍弱<br>4：6','相等<br>5：5','稍強<br>6：4','頗強<br>7：3','極強<br>8：2','超強<br>9：1'];
-  const secs=[...new Set(questions.map(q=>q.sec))];
+  const secs=getFixedSecs();
   let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 @page{size:A4;margin:2.5cm 2cm 2.5cm 2cm}
 body{font-family:'標楷體',serif;font-size:12pt;color:#000;margin:0;line-height:1.75}
@@ -1018,7 +1094,7 @@ body{font-family:'標楷體',serif;font-size:12pt;color:#000;margin:0;line-heigh
 
   let qn=1;
   secs.forEach(sec=>{
-    const sr=questions.filter(q=>q.sec===sec);
+    const sr=getOrderedQuestions(sec);
     const secTitle=sec==='構面比較'
       ?`1、您認為下列<strong>構面</strong>對<strong>AIoT 智慧工廠導入障礙評估</strong>而言，其相對重要性為何？`
       :`${qn+1}、就<strong>${sec}構面</strong>而言，您認為下列評鑑準則，其相對重要性為何？`;
@@ -1047,11 +1123,11 @@ body{font-family:'標楷體',serif;font-size:12pt;color:#000;margin:0;line-heigh
 }
 
 function buildEmailContent(){
-  const secs=[...new Set(questions.map(q=>q.sec))];
+  const secs=getFixedSecs();
   let text=`填答者：${userName}\n任職公司：${userCompany}\n填答日期：${new Date().toLocaleDateString('zh-TW')}\n\n`;
   let qn=1;
   secs.forEach(sec=>{
-    const sr=questions.filter(q=>q.sec===sec);
+    const sr=getOrderedQuestions(sec);
     text+=`【${qn++}. ${sec}】\n`;
     sr.forEach(q=>{
       const v=answers[q.key]||5,{left:ls,right:rs}=toScores(v);
